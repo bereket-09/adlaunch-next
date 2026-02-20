@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/Logo";
 import { useToast } from "@/hooks/use-toast";
+import { API_ENDPOINTS } from "@/config/api";
+import { useEffect } from "react";
 
 export default function AdminLoginPage() {
     const [email, setEmail] = useState("");
@@ -18,27 +20,54 @@ export default function AdminLoginPage() {
     const router = useRouter();
     const { toast } = useToast();
 
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+        if (token && role === "admin") {
+            router.push("/admin/dashboard");
+        }
+    }, [router]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
-        // Simulation for now
-        setTimeout(() => {
-            if (email && password) {
-                toast({
-                    title: "Welcome back, Commander",
-                    description: "Encrypted admin session established.",
-                });
-                router.push("/admin/dashboard");
-            } else {
+        try {
+            const res = await fetch(API_ENDPOINTS.ADMIN.LOGIN, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data.status) {
                 toast({
                     title: "Access Denied",
-                    description: "Invalid secure credentials provided.",
+                    description: data.error || "Invalid secure credentials provided.",
                     variant: "destructive",
                 });
+                return;
             }
+
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("role", "admin");
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            toast({
+                title: "Welcome back, Commander",
+                description: "Encrypted admin session established.",
+            });
+            router.push("/admin/dashboard");
+        } catch (err) {
+            toast({
+                title: "Connection Error",
+                description: "Failed to connect to the command center.",
+                variant: "destructive",
+            });
+        } finally {
             setIsLoading(false);
-        }, 1200);
+        }
     };
 
     return (

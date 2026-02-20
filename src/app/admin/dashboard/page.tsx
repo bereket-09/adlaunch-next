@@ -38,6 +38,7 @@ import {
     Cell,
 } from "recharts";
 import { API_ENDPOINTS } from "@/config/api";
+import { analyticsAPI } from "@/services/api";
 import AdminLayout from "@/components/AdminLayout";
 import Link from "next/link";
 import RealTimeIndicator from "@/components/analytics/RealTimeIndicator";
@@ -56,9 +57,7 @@ export default function AdminDashboardPage() {
     useEffect(() => {
         const loadDashboard = async () => {
             try {
-                const res = await fetch(API_ENDPOINTS.ANALYTICS.ADMIN_DASHBOARD);
-                const json = await res.json();
-
+                const json = await analyticsAPI.getAdminDashboard();
                 if (json.status) {
                     setData(json);
                 }

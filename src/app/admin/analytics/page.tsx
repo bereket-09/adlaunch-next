@@ -32,6 +32,7 @@ import {
 } from "recharts";
 
 import { API_ENDPOINTS } from "@/config/api";
+import { analyticsAPI } from "@/services/api";
 
 type AdminDashboardResponse = {
     status: boolean;
@@ -68,8 +69,7 @@ export default function AdminAnalyticsPage() {
     useEffect(() => {
         const loadDashboard = async () => {
             try {
-                const res = await fetch(API_ENDPOINTS.ANALYTICS.ADMIN_ANALYTICS);
-                const json = await res.json();
+                const json = await analyticsAPI.getAdminAnalysis();
                 setData(json);
             } catch (err) {
                 console.error("Failed to load admin analytics", err);

@@ -93,6 +93,8 @@ export default function AdminMarketersPage() {
     const [isTransactionsOpen, setIsTransactionsOpen] = useState(false);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [selectedMarketerName, setSelectedMarketerName] = useState("");
+    const [isKYCOpen, setIsKYCOpen] = useState(false);
+    const [kycMarketer, setKycMarketer] = useState<Marketer | null>(null);
 
     const { toast } = useToast();
 
@@ -226,10 +228,32 @@ export default function AdminMarketersPage() {
         }
     };
 
+    const handleApprove = async (id: string) => {
+        try {
+            await marketerAPI.update(id, { status: "active" });
+            toast({ title: "Application Approved", description: "Marketer account is now active." });
+            fetchMarketers();
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to approve.", variant: "destructive" });
+        }
+    };
+
+    const handleReject = async (id: string) => {
+        try {
+            await marketerAPI.update(id, { status: "rejected" });
+            toast({ title: "Application Rejected" });
+            fetchMarketers();
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to reject.", variant: "destructive" });
+        }
+    };
+
     const getStatusBadge = (status: string) => {
         switch (status) {
             case "active": return <Badge className="bg-emerald-500/10 text-emerald-600 border-none font-bold">ACTIVE</Badge>;
             case "deactivated": return <Badge variant="secondary" className="bg-rose-500/10 text-rose-600 border-none font-bold">INACTIVE</Badge>;
+            case "pending": return <Badge className="bg-amber-500/10 text-amber-600 border-none font-bold">PENDING APPROVAL</Badge>;
+            case "rejected": return <Badge className="bg-rose-500/10 text-rose-600 border-none font-bold text-xs">REJECTED</Badge>;
             case "pendingPassChange": return <Badge className="bg-amber-500/10 text-amber-600 border-none font-bold">ONBOARDING</Badge>;
             default: return <Badge variant="secondary" className="font-bold">{status?.toUpperCase() || ""}</Badge>;
         }
@@ -341,6 +365,21 @@ export default function AdminMarketersPage() {
                                                             </DropdownMenuItem>
                                                             <DropdownMenuItem className="rounded-lg py-2 cursor-pointer text-sm font-semibold" onClick={() => handleViewTransactions(marketer)}>
                                                                 <History className="h-4 w-4 mr-2" /> Transaction History
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuSeparator className="my-1" />
+                                                            {marketer.status === 'pending' && (
+                                                                <>
+                                                                    <DropdownMenuItem className="rounded-lg py-2 text-emerald-600 font-bold cursor-pointer text-sm" onClick={() => handleApprove(marketer._id)}>
+                                                                        <CheckCircle className="h-4 w-4 mr-2" /> Approve Application
+                                                                    </DropdownMenuItem>
+                                                                    <DropdownMenuItem className="rounded-lg py-2 text-rose-600 font-bold cursor-pointer text-sm" onClick={() => handleReject(marketer._id)}>
+                                                                        <Ban className="h-4 w-4 mr-2" /> Reject Application
+                                                                    </DropdownMenuItem>
+                                                                    <DropdownMenuSeparator className="my-1" />
+                                                                </>
+                                                            )}
+                                                            <DropdownMenuItem className="rounded-lg py-2 cursor-pointer text-sm font-semibold" onClick={() => { setKycMarketer(marketer); setIsKYCOpen(true); }}>
+                                                                <SearchCode className="h-4 w-4 mr-2" /> View KYC Details
                                                             </DropdownMenuItem>
                                                             <DropdownMenuSeparator className="my-1" />
                                                             <DropdownMenuItem className="rounded-lg py-2 text-destructive font-bold cursor-pointer text-sm" onClick={() => handleToggleStatus(marketer)}>
@@ -529,6 +568,80 @@ export default function AdminMarketersPage() {
                         <DialogFooter>
                             <Button variant="destructive" onClick={handleDeduct} className="w-full h-12 rounded-xl font-bold text-lg shadow-lg shadow-rose-200">Confirm Deduction</Button>
                         </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
+                {/* KYC Details Modal */}
+                <Dialog open={isKYCOpen} onOpenChange={setIsKYCOpen}>
+                    <DialogContent className="sm:max-w-2xl rounded-2xl border border-border/50 bg-background p-0 overflow-hidden shadow-3xl">
+                        <div className="p-6 bg-primary/10 border-b border-border/50">
+                            <DialogHeader>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary border border-primary/30">
+                                        <SearchCode className="h-6 w-6" />
+                                    </div>
+                                    <div>
+                                        <DialogTitle className="text-xl font-bold italic uppercase tracking-tight">Compliance Review</DialogTitle>
+                                        <DialogDescription className="text-xs font-bold text-primary/70 uppercase">KYC & Business Documentation</DialogDescription>
+                                    </div>
+                                </div>
+                            </DialogHeader>
+                        </div>
+
+                        {kycMarketer && (
+                            <div className="p-8 space-y-8">
+                                <div className="grid grid-cols-2 gap-8">
+                                    <div className="space-y-1.5">
+                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Full Name</Label>
+                                        <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-bold text-sm">{kycMarketer.name}</div>
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Email Address</Label>
+                                        <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-bold text-sm">{kycMarketer.email}</div>
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Company Entity</Label>
+                                        <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-bold text-sm">{kycMarketer.company_name || "N/A"}</div>
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Registration #</Label>
+                                        <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-mono font-bold text-sm">{kycMarketer.business_reg_number || "N/A"}</div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Principal Business Address</Label>
+                                    <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-medium text-sm leading-relaxed">{kycMarketer.business_address || "N/A"}</div>
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Primary Contact / Phone</Label>
+                                    <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-bold text-sm">{kycMarketer.contact_info || "N/A"}</div>
+                                </div>
+
+                                {kycMarketer.status === 'pending' && (
+                                    <div className="flex gap-4 pt-4 border-t border-border/50">
+                                        <Button
+                                            variant="destructive"
+                                            className="flex-1 h-12 rounded-xl font-bold uppercase tracking-widest text-xs"
+                                            onClick={() => { handleReject(kycMarketer._id); setIsKYCOpen(false); }}
+                                        >
+                                            Reject Application
+                                        </Button>
+                                        <Button
+                                            className="flex-2 h-12 rounded-xl font-bold uppercase tracking-widest text-xs px-12"
+                                            onClick={() => { handleApprove(kycMarketer._id); setIsKYCOpen(false); }}
+                                        >
+                                            Approve Partner
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        <div className="p-4 bg-secondary/10 border-t border-border/50 text-center">
+                            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.3em]">AdLaunch Compliance Engine v2.0</p>
+                        </div>
                     </DialogContent>
                 </Dialog>
             </div>

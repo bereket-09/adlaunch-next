@@ -54,9 +54,10 @@ export default function MarketerCampaignsPage() {
     const fetchCampaigns = async () => {
         try {
             let marketerId = localStorage.getItem("marketer_id");
+            if (!marketerId) return;
+
             setLoading(true);
-            const response = await fetch(API_ENDPOINTS.AD.ListByMarketer(marketerId || ""));
-            let data = await response.json();
+            const data = await adAPI.listByMarketer(marketerId);
             if (data.status) {
                 setCampaigns(data.ads);
             }

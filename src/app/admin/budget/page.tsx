@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { API_ENDPOINTS } from "@/config/api";
+import { format } from "date-fns";
+
 import {
     Save,
     Plus,
@@ -55,6 +58,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import KPICard from "@/components/analytics/KPICard";
+import { analyticsAPI } from "@/services/api";
 
 const rateTiers = [
     { id: 1, name: "Free", rate: 0.0, description: "Basic tier for new advertisers", campaigns: 0, color: "text-slate-500", bg: "bg-slate-50", icon: Shield },
@@ -64,6 +68,9 @@ const rateTiers = [
 ];
 
 export default function AdminBudgetPage() {
+    const [data, setData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+
     const [globalSettings, setGlobalSettings] = useState({
         autoDeduction: true,
         budgetAlertThreshold: 75,
@@ -71,9 +78,27 @@ export default function AdminBudgetPage() {
         allowNegativeBalance: false,
     });
 
+    useEffect(() => {
+        const fetchBudget = async () => {
+            try {
+                const json = await analyticsAPI.getAdminBudget();
+                if (json.status) {
+                    setData(json);
+                }
+            } catch (err) {
+                console.error("Failed to fetch budget data", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBudget();
+    }, []);
+
     const handleSave = () => {
         toast.success("Budget policies updated successfully.");
     };
+
 
     return (
         <AdminLayout title="Budget & Pricing">
@@ -102,10 +127,10 @@ export default function AdminBudgetPage() {
 
                 {/* KPI Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <KPICard title="Monthly Revenue" value="452,100 Br." icon={Wallet} trend="up" change={12.5} />
-                    <KPICard title="Average CPC" value="0.12 Br." icon={Zap} trend="down" change={2.1} />
-                    <KPICard title="Total Balance" value="1.2M Br." icon={GanttChartSquare} trend="neutral" />
-                    <KPICard title="Platform Fee" value="18.2%" icon={Calculator} trend="up" change={1.4} />
+                    <KPICard title="Total Revenue" value={`${data?.kpis?.total_revenue?.toLocaleString() || '0'} Br.`} icon={Wallet} trend="up" change={12.5} />
+                    <KPICard title="Total Top-ups" value={`${data?.kpis?.total_topups?.toLocaleString() || '0'} Br.`} icon={ArrowUpRight} trend="up" change={5.2} />
+                    <KPICard title="Current Balance" value={`${data?.kpis?.platform_balance?.toLocaleString() || '0'} Br.`} icon={GanttChartSquare} trend="neutral" />
+                    <KPICard title="Avg Deduction" value={`${data?.kpis?.avg_real_deduction?.toFixed(2) || '0.00'} Br.`} icon={Zap} trend="down" change={1.4} />
                 </div>
 
                 <Tabs defaultValue="rates" className="space-y-6">
@@ -113,6 +138,9 @@ export default function AdminBudgetPage() {
                         <TabsList className="bg-secondary/20 p-1 rounded-xl h-auto flex gap-1">
                             <TabsTrigger value="rates" className="rounded-lg px-6 py-2.5 gap-2 text-xs font-bold transition-all">
                                 <TrendingUp className="h-4 w-4" /> Pricing Tiers
+                            </TabsTrigger>
+                            <TabsTrigger value="transactions" className="rounded-lg px-6 py-2.5 gap-2 text-xs font-bold transition-all">
+                                <History className="h-4 w-4" /> Transactions
                             </TabsTrigger>
                             <TabsTrigger value="settings" className="rounded-lg px-6 py-2.5 gap-2 text-xs font-bold transition-all">
                                 <ShieldCheck className="h-4 w-4" /> Financial Policies
@@ -212,6 +240,62 @@ export default function AdminBudgetPage() {
                             </CardContent>
                         </Card>
                     </TabsContent>
+
+                    <TabsContent value="transactions" className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
+                        <Card className="border border-border/50 shadow-sm bg-background/50 backdrop-blur-sm rounded-2xl overflow-hidden">
+                            <CardHeader className="bg-secondary/10 border-b border-border/50 py-4 px-6">
+                                <div className="flex items-center gap-2">
+                                    <History className="h-4.5 w-4.5 text-primary" />
+                                    <CardTitle className="text-lg font-bold text-foreground">Platform Transaction History</CardTitle>
+                                </div>
+                                <CardDescription className="text-xs text-muted-foreground">Monitor all top-ups and deductions across the platform.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="p-0">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow className="bg-secondary/5 border-none">
+                                            <TableHead className="py-3 pl-6 uppercase text-[10px] font-bold text-muted-foreground">Marketer</TableHead>
+                                            <TableHead className="py-3 uppercase text-[10px] font-bold text-muted-foreground">Type</TableHead>
+                                            <TableHead className="py-3 uppercase text-[10px] font-bold text-muted-foreground">Amount</TableHead>
+                                            <TableHead className="py-3 uppercase text-[10px] font-bold text-muted-foreground">Reason</TableHead>
+                                            <TableHead className="py-3 pr-6 text-right uppercase text-[10px] font-bold text-muted-foreground">Timestamp</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {data?.recent_transactions?.map((t: any) => (
+                                            <TableRow key={t.id} className="hover:bg-secondary/10 transition-colors border-b border-border/50 group">
+                                                <TableCell className="py-4 pl-6">
+                                                    <span className="font-bold text-sm block text-foreground">{t.marketer || 'Unknown'} Marketer</span>
+                                                </TableCell>
+                                                <TableCell className="py-4">
+                                                    <Badge className={t.type === 'topup' ? 'bg-emerald-500/10 text-emerald-600 border-none' : 'bg-rose-500/10 text-rose-600 border-none'}>
+                                                        {t.type.toUpperCase()}
+                                                    </Badge>
+                                                </TableCell>
+                                                <TableCell className="py-4 font-mono font-bold text-foreground">
+                                                    {t.type === 'topup' ? '+' : '-'}{t.amount.toLocaleString()} Br.
+                                                </TableCell>
+                                                <TableCell className="py-4 italic text-muted-foreground text-xs">
+                                                    {t.reason || 'No reason provided'}
+                                                </TableCell>
+                                                <TableCell className="py-4 pr-6 text-right text-xs text-muted-foreground">
+                                                    {t.timestamp ? format(new Date(t.timestamp), 'MMM dd, HH:mm') : 'N/A'}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                        {(!data?.recent_transactions || data.recent_transactions.length === 0) && (
+                                            <TableRow>
+                                                <TableCell colSpan={5} className="py-10 text-center text-muted-foreground italic">
+                                                    No recent transactions found.
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
 
                     <TabsContent value="settings" className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
                         <Card className="border border-border/50 shadow-sm bg-background/50 backdrop-blur-sm rounded-2xl overflow-hidden">

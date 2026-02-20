@@ -21,6 +21,12 @@ const DashboardHeader = ({ title, onMenuClick, userType }: DashboardHeaderProps)
   const router = useRouter();
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
+    localStorage.removeItem("status");
+    localStorage.removeItem("marketer_id");
+    localStorage.removeItem("userInfo");
     router.push(userType === "admin" ? "/admin/login" : "/marketer/login");
   };
 

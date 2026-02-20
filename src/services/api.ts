@@ -8,6 +8,16 @@ async function fetchAPI<T>(
 ): Promise<T> {
   const headers = new Headers(options.headers);
 
+  // Add Authorization header if token exists
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('token');
+    if (token && token !== 'undefined' && token !== 'null') {
+      headers.set('authorization', `Bearer ${token}`);
+    } else {
+      console.warn("[fetchAPI] No valid token found in localStorage for:", url);
+    }
+  }
+
   // Only set Content-Type to JSON if body is NOT FormData
   if (!(options.body instanceof FormData)) {
     if (!headers.has('Content-Type')) {
@@ -15,10 +25,25 @@ async function fetchAPI<T>(
     }
   }
 
+  // Convert Headers instance to plain object to ensure compatibility with all fetch implementations
+  const headersObj: Record<string, string> = {};
+  headers.forEach((value, key) => {
+    headersObj[key.toLowerCase()] = value;
+  });
+
+  // if (typeof window !== "undefined") {
+  //   console.log(`[fetchAPI] Calling ${url} with header keys:`, Object.keys(headersObj));
+  // }
+
   const response = await fetch(url, {
     ...options,
-    headers,
+    headers: headersObj,
   });
+
+  // Log headers for debugging (client-side only)
+  if (typeof window !== 'undefined' && url.includes('/analytics/')) {
+    console.log(`[fetchAPI] Request to ${url} with Auth:`, !!headers.get('Authorization'));
+  }
 
   // Try parsing JSON safely
   let data: any;
@@ -222,7 +247,11 @@ export interface Marketer {
   total_budget: number;
   remaining_budget: number;
   contact_info: string;
-  status: 'active' | 'inactive' | 'pendingPassChange';
+  company_name?: string;
+  business_reg_number?: string;
+  business_address?: string;
+  kyc_info?: any;
+  status: 'active' | 'pending' | 'rejected' | 'pendingPassChange' | 'deactivated' | 'inactive';
   created_at: string;
   total_ads?: number;
   total_remaining_budget?: number;
@@ -462,4 +491,51 @@ export const analyticsAPI = {
 
   getUserDetail: (msisdn: string): Promise<UserAnalytics> =>
     fetchAPI(API_ENDPOINTS.ANALYTICS.USER_DETAIL(msisdn)),
+
+  getMarketerReports: (marketerId: string, period: number): Promise<any> =>
+    fetchAPI(`${API_ENDPOINTS.ANALYTICS.MarketerReports(marketerId)}?period=${period}`),
+
+  getAdminDashboard: (): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.ANALYTICS.ADMIN_DASHBOARD),
+
+  getAdminAnalysis: (): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.ANALYTICS.ADMIN_ANALYTICS),
+
+  getAdminFraud: (): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.ANALYTICS.ADMIN_FRAUD),
+
+  getAdminBudget: (): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.ANALYTICS.ADMIN_BUDGET),
+};
+
+// ============ Blacklist API ============
+
+export const blacklistAPI = {
+  list: (params?: URLSearchParams): Promise<any> =>
+    fetchAPI(`${API_ENDPOINTS.BLACKLIST.LIST}${params ? `?${params.toString()}` : ''}`),
+
+  add: (data: any): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.BLACKLIST.ADD, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  bulkAdd: (data: any): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.BLACKLIST.BULK_ADD, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  getStats: (): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.BLACKLIST.STATS),
+
+  remove: (id: string): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.BLACKLIST.REMOVE(id), {
+      method: 'DELETE',
+    }),
+
+  permanentDelete: (id: string): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.BLACKLIST.PERMANENT_DELETE(id), {
+      method: 'DELETE',
+    }),
 };

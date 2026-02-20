@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { API_ENDPOINTS } from "@/config/api";
+import { blacklistAPI } from "@/services/api";
 import AdminLayout from "@/components/AdminLayout";
 
 type BlacklistEntry = {
@@ -116,11 +117,10 @@ export default function BlacklistPage() {
             if (filterType) params.set("type", filterType);
             if (filterSeverity) params.set("severity", filterSeverity);
 
-            const res = await fetch(`${API_ENDPOINTS.BLACKLIST.LIST}?${params}`);
-            const data = await res.json();
-            if (data.status) {
-                setEntries(data.entries);
-                setTotalPages(data.pagination.pages || 1);
+            const json = await blacklistAPI.list(params);
+            if (json.status) {
+                setEntries(json.entries);
+                setTotalPages(json.pagination.pages || 1);
             }
         } catch (err) {
             console.error("Failed to fetch blacklist:", err);
@@ -132,9 +132,8 @@ export default function BlacklistPage() {
     const fetchStats = useCallback(async () => {
         setStatsLoading(true);
         try {
-            const res = await fetch(API_ENDPOINTS.BLACKLIST.STATS);
-            const data = await res.json();
-            if (data.status) setStats(data.stats);
+            const json = await blacklistAPI.getStats();
+            if (json.status) setStats(json.stats);
         } catch (err) {
             console.error("Failed to fetch blacklist stats:", err);
         } finally {
@@ -154,13 +153,8 @@ export default function BlacklistPage() {
         if (!newEntry.value.trim()) return;
         setActionLoading("add");
         try {
-            const res = await fetch(API_ENDPOINTS.BLACKLIST.ADD, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newEntry),
-            });
-            const data = await res.json();
-            if (data.status) {
+            const json = await blacklistAPI.add(newEntry);
+            if (json.status) {
                 setShowAddModal(false);
                 setNewEntry({
                     type: "msisdn",
@@ -188,21 +182,16 @@ export default function BlacklistPage() {
         if (!values.length) return;
         setActionLoading("bulk");
         try {
-            const res = await fetch(API_ENDPOINTS.BLACKLIST.BULK_ADD, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    entries: values.map((v) => ({
-                        type: bulkType,
-                        value: v,
-                        severity: bulkSeverity,
-                        reason: "bulk_import",
-                    })),
-                    blocked_by: "admin",
-                }),
+            const json = await blacklistAPI.bulkAdd({
+                entries: values.map((v) => ({
+                    type: bulkType,
+                    value: v,
+                    severity: bulkSeverity,
+                    reason: "bulk_import",
+                })),
+                blocked_by: "admin",
             });
-            const data = await res.json();
-            if (data.status) {
+            if (json.status) {
                 setShowBulkModal(false);
                 setBulkText("");
                 fetchEntries();
@@ -218,11 +207,8 @@ export default function BlacklistPage() {
     const handleDeactivate = async (id: string) => {
         setActionLoading(id);
         try {
-            const res = await fetch(API_ENDPOINTS.BLACKLIST.REMOVE(id), {
-                method: "DELETE",
-            });
-            const data = await res.json();
-            if (data.status) {
+            const json = await blacklistAPI.remove(id);
+            if (json.status) {
                 fetchEntries();
                 fetchStats();
             }
@@ -237,11 +223,8 @@ export default function BlacklistPage() {
         if (!confirm("Permanently delete this entry? This cannot be undone.")) return;
         setActionLoading(id);
         try {
-            const res = await fetch(API_ENDPOINTS.BLACKLIST.PERMANENT_DELETE(id), {
-                method: "DELETE",
-            });
-            const data = await res.json();
-            if (data.status) {
+            const json = await blacklistAPI.permanentDelete(id);
+            if (json.status) {
                 fetchEntries();
                 fetchStats();
             }
@@ -757,6 +740,7 @@ export default function BlacklistPage() {
                                 <div className="p-2.5 rounded-xl bg-orange-500/10">
                                     <Upload className="h-5 w-5 text-orange-500" />
                                 </div>
+                                size="sm"
                                 <div>
                                     <h2 className="text-lg font-extrabold">Bulk Import</h2>
                                     <p className="text-xs text-muted-foreground">

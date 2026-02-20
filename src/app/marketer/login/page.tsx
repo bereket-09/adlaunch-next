@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import Logo from "@/components/Logo";
 import { useToast } from "@/hooks/use-toast";
 import { API_ENDPOINTS } from "@/config/api";
+import { useEffect } from "react";
 
 export default function MarketerLoginPage() {
     const [email, setEmail] = useState("");
@@ -18,6 +19,20 @@ export default function MarketerLoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const { toast } = useToast();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        const status = localStorage.getItem("status");
+        const role = localStorage.getItem("role");
+
+        if (token && role === "marketer") {
+            if (status === "active") {
+                router.push("/marketer/dashboard");
+            } else if (status === "pendingPassChange") {
+                router.push("/marketer/update-password");
+            }
+        }
+    }, [router]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -43,6 +58,7 @@ export default function MarketerLoginPage() {
 
             const marketerStatus = data.marketer?.status;
             localStorage.setItem("token", data.token);
+            localStorage.setItem("role", "marketer");
             localStorage.setItem("marketer_id", data.marketer.id);
             localStorage.setItem("userInfo", JSON.stringify(data.marketer));
             localStorage.setItem("status", marketerStatus);
@@ -146,7 +162,7 @@ export default function MarketerLoginPage() {
 
                     <div className="space-y-6 pt-4">
                         <p className="text-center text-sm font-medium text-slate-500">
-                            New brand partner? <a href="#" className="text-primary font-bold hover:underline">Apply for Access</a>
+                            New brand partner? <Link href="/marketer/register" className="text-primary font-bold hover:underline">Apply for Access</Link>
                         </p>
 
                         <div className="flex items-center gap-4">

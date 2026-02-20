@@ -44,7 +44,14 @@ export const API_ENDPOINTS = {
     GET: (id: string) => `${API_CONFIG.API_BASE}/marketer/${id}`,
     UPDATE: (id: string) => `${API_CONFIG.API_BASE}/marketer/${id}`,
     LOGIN: `${API_CONFIG.API_BASE}/auth/marketer/login`,
+    REGISTER: `${API_CONFIG.API_BASE}/auth/marketer/register`,
     UPDATE_PASSWORD: `${API_CONFIG.API_BASE}/marketer/update-password`,
+  },
+
+  // Admin Auth endpoints
+  ADMIN: {
+    LOGIN: `${API_CONFIG.API_BASE}/auth/admin/login`,
+    ME: `${API_CONFIG.API_BASE}/auth/admin/me`,
   },
 
   // Budget endpoints
@@ -67,7 +74,9 @@ export const API_ENDPOINTS = {
     MarketerReports: (marketerId: string) => `${API_CONFIG.API_BASE}/analytics/marketer/reports/${marketerId}`,
     ADMIN_DASHBOARD: `${API_CONFIG.API_BASE}/analytics/admin/dashboard`,
     ADMIN_ANALYTICS: `${API_CONFIG.API_BASE}/analytics/admin/analysis`,
-    ADMIN_FRAUD: `${API_CONFIG.API_BASE}/analytics/admin/fraud`
+    ADMIN_FRAUD: `${API_CONFIG.API_BASE}/analytics/admin/fraud`,
+    ADMIN_BUDGET: `${API_CONFIG.API_BASE}/analytics/admin/budget`
+
   },
 
   SUBSCRIBER: {
@@ -90,6 +99,13 @@ export const API_ENDPOINTS = {
     UPDATE: (id: string) => `${API_CONFIG.API_BASE}/blacklist/${id}`,
     REMOVE: (id: string) => `${API_CONFIG.API_BASE}/blacklist/${id}`,
     PERMANENT_DELETE: (id: string) => `${API_CONFIG.API_BASE}/blacklist/${id}/permanent`,
+  },
+
+  // System Config endpoints
+  SYSTEM_CONFIG: {
+    LIST: `${API_CONFIG.API_BASE}/system-config`,
+    UPDATE: `${API_CONFIG.API_BASE}/system-config/update`,
+    MAINTENANCE_STATUS: `${API_CONFIG.API_BASE}/maintenance-status`,
   },
 
   // System Health

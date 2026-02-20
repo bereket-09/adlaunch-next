@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { analyticsAPI } from "@/services/api";
 import {
     FileText,
     Download,
@@ -64,10 +65,7 @@ export default function MarketerReportsPage() {
                 const marketerId = typeof window !== 'undefined' ? localStorage.getItem("marketer_id") || "" : "";
                 if (!marketerId) return;
 
-                const url = `${API_ENDPOINTS.ANALYTICS.MarketerReports(marketerId)}?period=${selectedPeriod}`;
-                const res = await fetch(url);
-                if (!res.ok) throw new Error(`Failed to fetch reports`);
-                const data = await res.json();
+                const data = await analyticsAPI.getMarketerReports(marketerId, selectedPeriod);
 
                 // Mapping Logic
                 const performanceData = data.analytics?.dailyData?.map((d: any, i: number) => ({

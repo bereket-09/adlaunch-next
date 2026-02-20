@@ -64,3 +64,22 @@ export async function completeTracking(token: string, meta: string, secureKey: s
         return { status: false, error: "Failed to complete tracking" };
     }
 }
+export async function pingTracking(token: string, secureKey: string, position: number) {
+    try {
+        const res = await fetch(`${BACKEND_URL}/track/ping`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                secure_key: secureKey,
+                token: token,
+                position,
+            }),
+            cache: 'no-store'
+        });
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.error("pingTracking error:", error);
+        return { status: false, error: "Failed to send ping" };
+    }
+}

@@ -46,7 +46,10 @@ export default function MarketerDashboardPage() {
         const fetchAnalysis = async () => {
             try {
                 const marketerID = typeof window !== 'undefined' ? localStorage.getItem("marketer_id") : null;
-                if (!marketerID) {
+                const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
+
+                if (!marketerID || !token) {
+                    console.warn("[Dashboard] Missing marketerID or token, redirecting to login...");
                     router.push("/marketer/login");
                     return;
                 }

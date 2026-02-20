@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // const BACKEND_URL = 'https://adplus-backend.onrender.com/api/v1';
 
-const BACKEND_URL = 'http://localhost:3001';
+const BACKEND_URL = 'http://localhost:3001/api/v1';
 
 // Bypass SSL certificate issues in development
 if (process.env.NODE_ENV === 'development') {
@@ -47,14 +47,29 @@ async function handleRequest(request: NextRequest, pathSegments: string[]) {
     const queryString = searchParams.toString();
     const url = `${BACKEND_URL}/${path}${queryString ? `?${queryString}` : ''}`;
 
-    const headers = new Headers();
+    const headers: Record<string, string> = {};
     request.headers.forEach((value, key) => {
-        // Forward relevant headers, skip host/origin
-        // Also skip accept-encoding to avoid compressed responses we might not handle well
-        if (!['host', 'origin', 'referer', 'accept-encoding'].includes(key.toLowerCase())) {
-            headers.set(key, value);
+        const lowerKey = key.toLowerCase();
+        if (!['host', 'origin', 'referer', 'accept-encoding', 'content-length', 'connection'].includes(lowerKey)) {
+            headers[lowerKey] = value;
         }
     });
+
+    // Force Authorization header extraction
+    const authHeaderValue = request.headers.get('authorization') || request.headers.get('Authorization');
+    if (authHeaderValue) {
+        headers['authorization'] = authHeaderValue;
+        console.log(`[Proxy] Forwarding token: ${authHeaderValue.substring(0, 15)}...`);
+    } else {
+        const allKeys = Array.from(request.headers.keys());
+        console.warn(`[Proxy] No Auth found for ${path}. Keys: ${allKeys.join(', ')}`);
+        // Check if it's hideously named
+        const secretToken = request.headers.get('x-auth-token') || request.headers.get('token');
+        if (secretToken) {
+            headers['authorization'] = `Bearer ${secretToken}`;
+            console.log(`[Proxy] Recovered token from x-auth-token/token`);
+        }
+    }
 
     const body = request.method !== 'GET' ? await request.arrayBuffer() : undefined;
 
@@ -63,6 +78,7 @@ async function handleRequest(request: NextRequest, pathSegments: string[]) {
             method: request.method,
             headers,
             body,
+            cache: 'no-store',
         });
 
         const responseData = await response.arrayBuffer();

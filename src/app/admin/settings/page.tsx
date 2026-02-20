@@ -19,6 +19,8 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import KPICard from "@/components/analytics/KPICard";
+import { useEffect } from "react";
+import { API_ENDPOINTS } from "@/config/api";
 
 export default function AdminSettingsPage() {
     const [platformSettings, setPlatformSettings] = useState({
@@ -27,6 +29,49 @@ export default function AdminSettingsPage() {
         maintenanceMode: false,
         debugMode: false,
     });
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const fetchConfigs = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const res = await fetch(API_ENDPOINTS.SYSTEM_CONFIG.LIST, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.status && data.configs) {
+                    const findVal = (key: string) => data.configs.find((c: any) => c.key === key)?.value;
+
+                    setPlatformSettings(prev => ({
+                        ...prev,
+                        maintenanceMode: findVal("maintenance_mode") ?? prev.maintenanceMode,
+                        platformName: findVal("platform_name") ?? prev.platformName,
+                        supportEmail: findVal("support_email") ?? prev.supportEmail,
+                        debugMode: findVal("debug_mode") ?? prev.debugMode,
+                    }));
+
+                    setSecuritySettings(prev => ({
+                        ...prev,
+                        twoFactorRequired: findVal("2fa_required") ?? prev.twoFactorRequired,
+                        sessionTimeout: findVal("session_timeout") ?? prev.sessionTimeout,
+                        ipWhitelisting: findVal("ip_whitelisting") ?? prev.ipWhitelisting,
+                        auditLogging: findVal("audit_logging") ?? prev.auditLogging,
+                    }));
+
+                    setApiSettings(prev => ({
+                        ...prev,
+                        rateLimit: findVal("api_rate_limit") ?? prev.rateLimit,
+                        timeout: findVal("api_timeout") ?? prev.timeout,
+                        retryAttempts: findVal("api_retries") ?? prev.retryAttempts,
+                    }));
+                }
+            } catch (err) {
+                console.error("Failed to fetch configs", err);
+            }
+        };
+        fetchConfigs();
+    }, []);
 
     const [securitySettings, setSecuritySettings] = useState({
         twoFactorRequired: true,
@@ -48,8 +93,42 @@ export default function AdminSettingsPage() {
         retryAttempts: 3,
     });
 
-    const handleSave = () => {
-        toast.success("Settings updated successfully.");
+    const handleSave = async () => {
+        setIsLoading(true);
+        try {
+            const token = localStorage.getItem("token");
+
+            const updates = [
+                { key: "maintenance_mode", value: platformSettings.maintenanceMode },
+                { key: "platform_name", value: platformSettings.platformName },
+                { key: "support_email", value: platformSettings.supportEmail },
+                { key: "debug_mode", value: platformSettings.debugMode },
+                { key: "2fa_required", value: securitySettings.twoFactorRequired },
+                { key: "session_timeout", value: securitySettings.sessionTimeout },
+                { key: "ip_whitelisting", value: securitySettings.ipWhitelisting },
+                { key: "audit_logging", value: securitySettings.auditLogging },
+                { key: "api_rate_limit", value: apiSettings.rateLimit },
+                { key: "api_timeout", value: apiSettings.timeout },
+                { key: "api_retries", value: apiSettings.retryAttempts },
+            ];
+
+            for (const update of updates) {
+                await fetch(API_ENDPOINTS.SYSTEM_CONFIG.UPDATE, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify(update),
+                });
+            }
+
+            toast.success("Settings updated successfully.");
+        } catch (err) {
+            toast.error("Failed to update settings.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -68,8 +147,18 @@ export default function AdminSettingsPage() {
                         <Button variant="outline" size="sm" className="h-9 rounded-xl px-4 gap-2 border-border/50 font-bold hover:bg-secondary">
                             <RefreshCcw className="h-4 w-4" /> Reset
                         </Button>
-                        <Button onClick={handleSave} size="sm" className="h-9 rounded-xl px-6 font-bold gap-2">
-                            <Save className="h-4 w-4" /> Save Changes
+                        <Button
+                            onClick={handleSave}
+                            size="sm"
+                            className="h-9 rounded-xl px-6 font-bold gap-2"
+                            disabled={isLoading}
+                        >
+                            {isLoading ? (
+                                <RefreshCcw className="h-4 w-4 animate-spin" />
+                            ) : (
+                                <Save className="h-4 w-4" />
+                            )}
+                            {isLoading ? "Saving..." : "Save Changes"}
                         </Button>
                     </div>
                 </div>
@@ -195,7 +284,6 @@ export default function AdminSettingsPage() {
                                             <Switch
                                                 checked={securitySettings.ipWhitelisting}
                                                 onCheckedChange={(checked) => setSecuritySettings({ ...securitySettings, ipWhitelisting: checked })}
-                                                size="sm"
                                             />
                                         </div>
                                         <div className="flex items-center justify-between p-3 rounded-lg border border-border/50">
@@ -203,7 +291,6 @@ export default function AdminSettingsPage() {
                                             <Switch
                                                 checked={securitySettings.auditLogging}
                                                 onCheckedChange={(checked) => setSecuritySettings({ ...securitySettings, auditLogging: checked })}
-                                                size="sm"
                                             />
                                         </div>
                                     </div>

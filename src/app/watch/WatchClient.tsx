@@ -13,7 +13,7 @@ import {
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { startTracking, completeTracking, getVideoDetails } from "./actions";
+import { startTracking, completeTracking, getVideoDetails, pingTracking } from "./actions";
 import API_CONFIG from "@/config/api";
 
 type ViewState =
@@ -244,6 +244,24 @@ export default function WatchClient({ token, initialData }: WatchClientProps) {
             video.removeEventListener("volumechange", onVolumeChange);
         };
     }, [viewState, currentSecureKey]);
+
+    // NEW: Progress Ping logic for drop-off tracking
+    useEffect(() => {
+        if (viewState !== "playing" || !token || !currentSecureKey) return;
+
+        const pingInterval = setInterval(async () => {
+            if (videoRef.current && !videoRef.current.paused) {
+                const position = Math.floor(videoRef.current.currentTime);
+                try {
+                    await pingTracking(token, currentSecureKey, position);
+                } catch (err) {
+                    console.error("Ping failed", err);
+                }
+            }
+        }, 5000); // Ping every 5 seconds
+
+        return () => clearInterval(pingInterval);
+    }, [viewState, token, currentSecureKey]);
 
     const toggleFullscreen = useCallback(() => {
         const video = videoRef.current;

@@ -93,8 +93,10 @@ const CampaignComparison = () => {
                     borderRadius: "8px",
                   }}
                   formatter={(value, name) => {
-                    if (name === 'Completions') return value.toLocaleString();
-                    if (name === 'Spend') return `$${value.toLocaleString()}`;
+                    if (value === undefined || value === null) return '';
+                    const numericValue = Number(value);
+                    if (name === 'Completions') return numericValue.toLocaleString();
+                    if (name === 'Spend') return `$${numericValue.toLocaleString()}`;
                     return `${value}%`;
                   }}
                 />

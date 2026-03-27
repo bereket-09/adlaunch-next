@@ -1,0 +1,27 @@
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\bereket.zelalem\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\bereket.zelalem\Downloads\adlaunch-platform-main\adlaunch-platform-main\package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Experiments (use with caution):
+  ✓ turbopackUseSystemTlsCerts
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 33.2s
+  Running TypeScript ...
+Failed to compile.
+
+./src/components/ui/calendar.tsx:45:9
+Type error: Object literal may only specify known properties, and 'IconLeft' does not exist in type 'Partial<CustomComponents>'.
+
+[0m [90m 43 |[39m       }}
+ [90m 44 |[39m       components[33m=[39m{{
+[31m[1m>[22m[39m[90m 45 |[39m         [33mIconLeft[39m[33m:[39m ({ [33m...[39m_props }) [33m=>[39m [33m<[39m[33mChevronLeft[39m className[33m=[39m[32m"h-4 w-4"[39m [33m/[39m[33m>[39m[33m,[39m
+ [90m    |[39m         [31m[1m^[22m[39m
+ [90m 46 |[39m         [33mIconRight[39m[33m:[39m ({ [33m...[39m_props }) [33m=>[39m [33m<[39m[33mChevronRight[39m className[33m=[39m[32m"h-4 w-4"[39m [33m/[39m[33m>[39m[33m,[39m
+ [90m 47 |[39m       }}
+ [90m 48 |[39m       {[33m...[39mprops}[0m
+Next.js build worker exited with code: 1 and signal: null

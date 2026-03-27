@@ -1,0 +1,38 @@
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\bereket.zelalem\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\bereket.zelalem\Downloads\adlaunch-platform-main\adlaunch-platform-main\package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+
+  Creating an optimized production build ...
+Turbopack build encountered 1 warnings:
+[next]/internal/font/google/inter_fe8b9d92.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap
+Hint: It looks like this error was TLS-related. Try enabling system TLS certificates with NEXT_TURBOPACK_EXPERIMENTAL_USE_SYSTEM_TLS_CERTS=1 as an environment variable, or set experimental.turbopackUseSystemTlsCerts in your next.config.js file.
+
+Import trace:
+  Server Component:
+    [next]/internal/font/google/inter_fe8b9d92.module.css
+    [next]/internal/font/google/inter_fe8b9d92.js
+    ./Downloads/adlaunch-platform-main/adlaunch-platform-main/New folder/adlaunch-next/src/app/layout.tsx
+
+
+
+> Build error occurred
+Error: Turbopack build failed with 1 errors:
+[next]/internal/font/google/inter_fe8b9d92.module.css
+next/font: error:
+Failed to fetch `Inter` from Google Fonts.
+
+Import trace:
+  Server Component:
+    [next]/internal/font/google/inter_fe8b9d92.module.css
+    [next]/internal/font/google/inter_fe8b9d92.js
+    ./Downloads/adlaunch-platform-main/adlaunch-platform-main/New folder/adlaunch-next/src/app/layout.tsx
+
+
+    at ignore-listed frames

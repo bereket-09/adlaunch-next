@@ -46,6 +46,7 @@ export const API_ENDPOINTS = {
     LOGIN: `${API_CONFIG.API_BASE}/auth/marketer/login`,
     REGISTER: `${API_CONFIG.API_BASE}/auth/marketer/register`,
     UPDATE_PASSWORD: `${API_CONFIG.API_BASE}/marketer/update-password`,
+    KYC: (id: string) => `${API_CONFIG.API_BASE}/marketer/${id}/kyc`,
   },
 
   // Admin Auth endpoints
@@ -106,6 +107,14 @@ export const API_ENDPOINTS = {
     LIST: `${API_CONFIG.API_BASE}/system-config`,
     UPDATE: `${API_CONFIG.API_BASE}/system-config/update`,
     MAINTENANCE_STATUS: `${API_CONFIG.API_BASE}/maintenance-status`,
+  },
+
+  // Billing Model endpoints
+  BILLING_MODEL: {
+    LIST: `${API_CONFIG.API_BASE}/billing-models/list`,
+    CREATE: `${API_CONFIG.API_BASE}/billing-models/create`,
+    UPDATE: (id: string) => `${API_CONFIG.API_BASE}/billing-models/${id}`,
+    DELETE: (id: string) => `${API_CONFIG.API_BASE}/billing-models/${id}`,
   },
 
   // System Health

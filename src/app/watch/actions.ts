@@ -1,6 +1,9 @@
 "use server";
+import API_CONFIG from "@/config/api";
 
-const BACKEND_URL = 'https://adplus-backend.onrender.com/api/v1';
+const BACKEND_URL = process.env.NODE_ENV === 'development' 
+    ? 'http://localhost:3001/api/v1'
+    : 'https://adplus-backend.onrender.com/api/v1';
 
 // Bypass SSL certificate issues in development for server-side fetches
 if (process.env.NODE_ENV === 'development') {

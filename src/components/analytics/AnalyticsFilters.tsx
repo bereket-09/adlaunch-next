@@ -22,11 +22,13 @@ interface FilterConfig {
 interface AnalyticsFiltersProps {
   config?: FilterConfig;
   onFiltersChange?: (filters: Record<string, any>) => void;
+  campaigns?: Array<{ _id: string; campaign_name: string }>; // New prop
 }
 
 const AnalyticsFilters = ({ 
   config = { msisdn: true, campaign: true, status: true, dateRange: true },
-  onFiltersChange 
+  onFiltersChange,
+  campaigns = [] // New prop
 }: AnalyticsFiltersProps) => {
   const [filters, setFilters] = useState<Record<string, any>>({});
   const [dateFrom, setDateFrom] = useState<Date>();
@@ -69,9 +71,11 @@ const AnalyticsFilters = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Campaigns</SelectItem>
-              <SelectItem value="summer-promo">Summer Promo 2024</SelectItem>
-              <SelectItem value="data-bundle">Data Bundle Offer</SelectItem>
-              <SelectItem value="voice-pack">Voice Pack Deal</SelectItem>
+              {campaigns.map((c) => (
+                <SelectItem key={c._id} value={c._id}>
+                  {c.campaign_name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         )}

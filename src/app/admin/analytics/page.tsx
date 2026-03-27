@@ -265,9 +265,9 @@ export default function AdminAnalyticsPage() {
                                                             <span className="text-sm font-bold">{m.name}</span>
                                                         </div>
                                                     </TableCell>
-                                                    <td className="py-3 text-center text-xs font-medium">{m.campaigns}</td>
-                                                    <td className="py-3 text-center text-xs font-mono">{m.views.toLocaleString()}</td>
-                                                    <td className="py-3 text-right text-xs font-bold text-primary">{m.spend.toLocaleString()} Br.</td>
+                                                    <td className="py-3 text-center text-xs font-medium">{m.campaigns || 0}</td>
+                                                    <td className="py-3 text-center text-xs font-mono">{(m.views ?? 0).toLocaleString()}</td>
+                                                    <td className="py-3 text-right text-xs font-bold text-primary">{(m.spend ?? 0).toLocaleString()} Br.</td>
                                                     <td className="py-3 pr-6 text-right">
                                                         <Badge variant="outline" className="font-bold text-[10px] bg-emerald-50 text-emerald-600 border-none">
                                                             {m.efficiency}%

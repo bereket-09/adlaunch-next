@@ -20,10 +20,11 @@ export default async function SubscriberPortal({
         msisdn: "251912345678", // placeholder or from session
         ip,
         userAgent,
-        device: { type: 'server' },
+        device: { type: 'server', model: 'Unknown', brand: 'Unknown', platform: 'Unknown', userAgent: userAgent, touchPoints: 0 },
         screen: { width: 0, height: 0, pixelRatio: 1 },
         location: { lat: 0, lon: 0, country: "ET" }
     };
+
 
     const serverMetaBase64 = Buffer.from(JSON.stringify(serverMeta)).toString('base64');
 

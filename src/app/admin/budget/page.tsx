@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from "react";
 import { API_ENDPOINTS } from "@/config/api";
@@ -24,7 +25,8 @@ import {
     History,
     FileText,
     ArrowDownRight,
-    Globe
+    Globe,
+    Trash2
 } from "lucide-react";
 import AdminLayout from "@/components/AdminLayout";
 import {
@@ -58,18 +60,25 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import KPICard from "@/components/analytics/KPICard";
-import { analyticsAPI } from "@/services/api";
-
-const rateTiers = [
-    { id: 1, name: "Free", rate: 0.0, description: "Basic tier for new advertisers", campaigns: 0, color: "text-slate-500", bg: "bg-slate-50", icon: Shield },
-    { id: 2, name: "Standard", rate: 0.1, description: "Default rate for most campaigns", campaigns: 14, color: "text-blue-500", bg: "bg-blue-50", icon: Zap },
-    { id: 3, name: "Premium", rate: 0.15, description: "Priority placement and better targeting", campaigns: 38, color: "text-orange-500", bg: "bg-orange-50", icon: TrendingUp },
-    { id: 4, name: "Enterprise", rate: 1.2, description: "Custom solutions for large advertisers", campaigns: 5, color: "text-purple-500", bg: "bg-purple-50", icon: Globe },
-];
+import { analyticsAPI, billingModelAPI } from "@/services/api";
 
 export default function AdminBudgetPage() {
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [billingModels, setBillingModels] = useState<any[]>([]);
+    const [isSaving, setIsSaving] = useState(false);
+
+    const [newModel, setNewModel] = useState({
+        name: "",
+        cpv_rate: 0,
+        cpc_rate: 0,
+        description: "",
+        features: {
+            has_video: true,
+            has_banner: false,
+            has_cta: false
+        }
+    });
 
     const [globalSettings, setGlobalSettings] = useState({
         autoDeduction: true,
@@ -77,6 +86,15 @@ export default function AdminBudgetPage() {
         pauseCampaignsAtZero: true,
         allowNegativeBalance: false,
     });
+
+    const fetchBillingModels = async () => {
+        try {
+            const res = await billingModelAPI.list();
+            if (res.status) setBillingModels(res.models);
+        } catch (err) {
+            console.error("Failed to fetch billing models", err);
+        }
+    };
 
     useEffect(() => {
         const fetchBudget = async () => {
@@ -93,7 +111,40 @@ export default function AdminBudgetPage() {
         };
 
         fetchBudget();
+        fetchBillingModels();
     }, []);
+
+    const handleCreateModel = async () => {
+        setIsSaving(true);
+        try {
+            const res = await billingModelAPI.create(newModel);
+            if (res.status) {
+                toast.success("Billing model created.");
+                fetchBillingModels();
+                setNewModel({
+                    name: "",
+                    cpv_rate: 0,
+                    cpc_rate: 0,
+                    description: "",
+                    features: { has_video: true, has_banner: false, has_cta: false }
+                });
+            }
+        } catch (err) {
+            toast.error("Failed to create billing model.");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleUpdateModel = async (id: string, updates: any) => {
+        try {
+            await billingModelAPI.update(id, updates);
+            toast.success("Model updated.");
+            fetchBillingModels();
+        } catch (err) {
+            toast.error("Failed to update.");
+        }
+    };
 
     const handleSave = () => {
         toast.success("Budget policies updated successfully.");
@@ -101,93 +152,134 @@ export default function AdminBudgetPage() {
 
 
     return (
-        <AdminLayout title="Budget & Pricing">
-            <div className="space-y-6 animate-in fade-in duration-500">
+        <AdminLayout title="Billing Models">
+            <div className="page-container">
                 {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="space-y-1">
-                        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-                            Financial Controls
-                            <Badge className="bg-emerald-500/10 text-emerald-600 border-none font-bold py-0.5 px-2 text-[10px]">
-                                SYNCED
-                            </Badge>
-                        </h1>
-                        <p className="text-muted-foreground text-sm">Manage pricing tiers, unit rates, and financial enforcement policies.</p>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
+                    <div>
+                        <div className="flex items-center gap-2.5 mb-1">
+                            <h1 className="text-2xl font-bold tracking-tight text-foreground">Financial Controls</h1>
+                            <span className="badge-green">Synced</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">Manage pricing tiers, unit rates, and financial enforcement policies.</p>
                     </div>
-                    <div className="flex gap-3 items-center bg-background/50 backdrop-blur-sm p-2 rounded-2xl border border-border/50 shadow-sm">
-                        <Badge variant="outline" className="bg-emerald-50 text-emerald-600 border-none py-1 px-3 font-bold text-[10px]">
-                            ACTIVE
-                        </Badge>
-                        <Separator orientation="vertical" className="h-6 bg-border/50" />
-                        <Button variant="ghost" size="sm" className="h-8 rounded-lg font-bold text-xs gap-2 px-3">
-                            <History className="h-4 w-4" /> Audit Logs
-                        </Button>
-                    </div>
+                    <Button variant="ghost" size="sm" className="h-9 rounded-xl font-semibold text-xs gap-2 px-4 border border-border/60">
+                        <History className="h-4 w-4" /> Audit Logs
+                    </Button>
                 </div>
 
                 {/* KPI Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <KPICard title="Total Revenue" value={`${data?.kpis?.total_revenue?.toLocaleString() || '0'} Br.`} icon={Wallet} trend="up" change={12.5} />
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <KPICard title="Total Revenue" value={`${data?.kpis?.total_revenue?.toLocaleString() || '0'} Br.`} icon={Wallet} trend="up" change={12.5} accent />
                     <KPICard title="Total Top-ups" value={`${data?.kpis?.total_topups?.toLocaleString() || '0'} Br.`} icon={ArrowUpRight} trend="up" change={5.2} />
-                    <KPICard title="Current Balance" value={`${data?.kpis?.platform_balance?.toLocaleString() || '0'} Br.`} icon={GanttChartSquare} trend="neutral" />
+                    <KPICard title="Platform Balance" value={`${data?.kpis?.platform_balance?.toLocaleString() || '0'} Br.`} icon={GanttChartSquare} trend="neutral" accent />
                     <KPICard title="Avg Deduction" value={`${data?.kpis?.avg_real_deduction?.toFixed(2) || '0.00'} Br.`} icon={Zap} trend="down" change={1.4} />
                 </div>
 
-                <Tabs defaultValue="rates" className="space-y-6">
-                    <div className="bg-background/50 backdrop-blur-sm p-2 rounded-2xl border border-border/50 shadow-sm overflow-x-auto">
-                        <TabsList className="bg-secondary/20 p-1 rounded-xl h-auto flex gap-1">
-                            <TabsTrigger value="rates" className="rounded-lg px-6 py-2.5 gap-2 text-xs font-bold transition-all">
-                                <TrendingUp className="h-4 w-4" /> Pricing Tiers
-                            </TabsTrigger>
-                            <TabsTrigger value="transactions" className="rounded-lg px-6 py-2.5 gap-2 text-xs font-bold transition-all">
-                                <History className="h-4 w-4" /> Transactions
-                            </TabsTrigger>
-                            <TabsTrigger value="settings" className="rounded-lg px-6 py-2.5 gap-2 text-xs font-bold transition-all">
-                                <ShieldCheck className="h-4 w-4" /> Financial Policies
-                            </TabsTrigger>
-                        </TabsList>
-                    </div>
+                <Tabs defaultValue="rates" className="space-y-5">
+                    <TabsList className="bg-secondary/80 rounded-xl p-1 gap-1 h-auto">
+                        <TabsTrigger value="rates" className="rounded-lg px-5 py-2 gap-2 text-xs font-semibold transition-all">
+                            <TrendingUp className="h-3.5 w-3.5" /> Billing Models
+                        </TabsTrigger>
+                        <TabsTrigger value="transactions" className="rounded-lg px-5 py-2 gap-2 text-xs font-semibold transition-all">
+                            <History className="h-3.5 w-3.5" /> Transactions
+                        </TabsTrigger>
+                        <TabsTrigger value="settings" className="rounded-lg px-5 py-2 gap-2 text-xs font-semibold transition-all">
+                            <ShieldCheck className="h-3.5 w-3.5" /> Financial Policies
+                        </TabsTrigger>
+                    </TabsList>
 
-                    <TabsContent value="rates" className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
-                        <Card className="border border-border/50 shadow-sm bg-background/50 backdrop-blur-sm rounded-2xl overflow-hidden">
-                            <CardHeader className="bg-secondary/10 border-b border-border/50 py-4 px-6 flex flex-row items-center justify-between">
+                    <TabsContent value="rates" className="space-y-5">
+                        <Card className="card-elevated border-0 rounded-2xl overflow-hidden">
+                            <CardHeader className="border-b border-border/40 py-4 px-6 flex flex-row items-center justify-between">
                                 <div className="space-y-0.5">
                                     <div className="flex items-center gap-2">
                                         <BarChart3 className="h-4 w-4 text-primary" />
-                                        <CardTitle className="text-lg font-bold">Cost Per Click Rates</CardTitle>
+                                        <CardTitle className="text-base font-bold">Billing Models</CardTitle>
                                     </div>
-                                    <CardDescription className="text-xs">Define the cost for each successful ad engagement.</CardDescription>
+                                    <CardDescription className="text-xs">Configure dynamic pricing tiers for ad campaigns.</CardDescription>
                                 </div>
                                 <Dialog>
                                     <DialogTrigger asChild>
-                                        <Button size="sm" className="h-9 rounded-xl font-bold gap-2 px-4 shadow-sm">
-                                            <Plus className="h-4 w-4" /> Add Rate Tier
+                                        <Button size="sm" className="h-9 rounded-xl font-bold gap-2 px-4 text-white"
+                                                style={{ background: 'linear-gradient(135deg, hsl(24,100%,50%), hsl(34,100%,55%))' }}>
+                                            <Plus className="h-4 w-4" /> Add Billing Model
                                         </Button>
                                     </DialogTrigger>
                                     <DialogContent className="sm:max-w-md rounded-2xl p-6">
                                         <DialogHeader>
                                             <DialogTitle className="text-xl font-bold flex items-center gap-2">
-                                                <TrendingUp className="h-5 w-5 text-primary" /> Add New Rate Tier
+                                                <TrendingUp className="h-5 w-5 text-primary" /> Add New Billing Model
                                             </DialogTitle>
-                                            <CardDescription className="text-xs">Configure a new pricing model for the platform.</CardDescription>
+                                            <CardDescription className="text-xs">Configure how marketers are billed and what features they get.</CardDescription>
                                         </DialogHeader>
                                         <div className="space-y-4 pt-4">
                                             <div className="space-y-1.5">
                                                 <Label className="text-[10px] font-bold uppercase text-muted-foreground ml-1">Tier Name</Label>
-                                                <Input placeholder="e.g. Ultra Premium" className="h-10 rounded-lg text-sm" />
+                                                <Input 
+                                                    value={newModel.name}
+                                                    onChange={(e) => setNewModel({...newModel, name: e.target.value})}
+                                                    placeholder="e.g. Ultra Premium" 
+                                                    className="h-10 rounded-lg text-sm" 
+                                                />
                                             </div>
-                                            <div className="space-y-1.5">
-                                                <Label className="text-[10px] font-bold uppercase text-muted-foreground ml-1">Rate (ETB per Click)</Label>
-                                                <div className="relative">
-                                                    <Input type="number" step="0.01" placeholder="0.25" className="h-12 rounded-lg text-lg font-bold pl-10" />
-                                                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-1.5">
+                                                    <Label className="text-[10px] font-bold uppercase text-muted-foreground ml-1">CPV Rate (ETB)</Label>
+                                                    <Input 
+                                                        type="number" 
+                                                        value={newModel.cpv_rate}
+                                                        onChange={(e) => setNewModel({...newModel, cpv_rate: parseFloat(e.target.value)})}
+                                                        placeholder="0.10" 
+                                                        className="h-10 rounded-lg text-sm" 
+                                                    />
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <Label className="text-[10px] font-bold uppercase text-muted-foreground ml-1">CPC Rate (ETB)</Label>
+                                                    <Input 
+                                                        type="number" 
+                                                        value={newModel.cpc_rate}
+                                                        onChange={(e) => setNewModel({...newModel, cpc_rate: parseFloat(e.target.value)})}
+                                                        placeholder="0.05" 
+                                                        className="h-10 rounded-lg text-sm" 
+                                                    />
                                                 </div>
                                             </div>
+                                            
+                                            <div className="space-y-3 p-3 bg-secondary/20 rounded-xl border border-border/50">
+                                                <Label className="text-[10px] font-bold uppercase text-muted-foreground">Features Included</Label>
+                                                <div className="space-y-2">
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-xs font-medium">Video Ad</span>
+                                                        <Switch checked={newModel.features.has_video} onCheckedChange={(val) => setNewModel({...newModel, features: {...newModel.features, has_video: val}})} />
+                                                    </div>
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-xs font-medium">Banner Ad</span>
+                                                        <Switch checked={newModel.features.has_banner} onCheckedChange={(val) => setNewModel({...newModel, features: {...newModel.features, has_banner: val}})} />
+                                                    </div>
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-xs font-medium">CTA Button</span>
+                                                        <Switch checked={newModel.features.has_cta} onCheckedChange={(val) => setNewModel({...newModel, features: {...newModel.features, has_cta: val}})} />
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div className="space-y-1.5">
                                                 <Label className="text-[10px] font-bold uppercase text-muted-foreground ml-1">Description</Label>
-                                                <Input placeholder="Short description of this tier..." className="h-10 rounded-lg text-sm" />
+                                                <Input 
+                                                    value={newModel.description}
+                                                    onChange={(e) => setNewModel({...newModel, description: e.target.value})}
+                                                    placeholder="Short description of this tier..." 
+                                                    className="h-10 rounded-lg text-sm" 
+                                                />
                                             </div>
-                                            <Button className="w-full h-11 rounded-lg font-bold mt-2">Save Rate Tier</Button>
+                                            <Button 
+                                                onClick={handleCreateModel} 
+                                                disabled={isSaving}
+                                                className="w-full h-11 rounded-lg font-bold mt-2"
+                                            >
+                                                {isSaving ? "Saving..." : "Save Billing Model"}
+                                            </Button>
                                         </div>
                                     </DialogContent>
                                 </Dialog>
@@ -196,42 +288,46 @@ export default function AdminBudgetPage() {
                                 <Table>
                                     <TableHeader>
                                         <TableRow className="bg-secondary/5 border-none">
-                                            <TableHead className="py-3 pl-6 uppercase text-[10px] font-bold text-muted-foreground">Tier Name</TableHead>
-                                            <TableHead className="py-3 uppercase text-[10px] font-bold text-muted-foreground">Rate (CPC)</TableHead>
-                                            <TableHead className="py-3 uppercase text-[10px] font-bold text-muted-foreground">Description</TableHead>
-                                            <TableHead className="py-3 pr-6 text-right uppercase text-[10px] font-bold text-muted-foreground">Active Campaigns</TableHead>
+                                            <TableHead className="py-3 pl-6 uppercase text-[10px] font-bold text-muted-foreground">Name</TableHead>
+                                            <TableHead className="py-3 uppercase text-[10px] font-bold text-muted-foreground">Rates (CPV / CPC)</TableHead>
+                                            <TableHead className="py-3 uppercase text-[10px] font-bold text-muted-foreground">Features</TableHead>
+                                            <TableHead className="py-3 pr-6 text-right uppercase text-[10px] font-bold text-muted-foreground">Manage</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {rateTiers.map((tier) => (
-                                            <TableRow key={tier.id} className="hover:bg-secondary/10 transition-colors border-b border-border/50 group">
+                                        {billingModels.map((model) => (
+                                            <TableRow key={model._id} className="hover:bg-primary/[0.02] transition-colors border-b border-border/40 group">
                                                 <TableCell className="py-4 pl-6">
                                                     <div className="flex items-center gap-3">
-                                                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${tier.bg} ${tier.color} border-current/20`}>
-                                                            <tier.icon className="h-4.5 w-4.5" />
+                                                        <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-primary/10">
+                                                            <Zap className="h-4 w-4 text-primary" />
                                                         </div>
                                                         <div>
-                                                            <span className="font-bold text-sm block">{tier.name}</span>
-                                                            <span className="text-[9px] font-bold text-muted-foreground uppercase">Tier ID: 00{tier.id}</span>
+                                                            <span className="font-bold text-sm block">{model.name}</span>
+                                                            <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wide">{model.slug}</span>
                                                         </div>
                                                     </div>
                                                 </TableCell>
                                                 <TableCell className="py-4">
-                                                    <Badge variant="outline" className="font-mono text-sm font-bold border-border/50 py-1 px-3 rounded-lg bg-background">
-                                                        {tier.rate.toFixed(2)} <span className="text-[10px] opacity-60 ml-1">ETB</span>
-                                                    </Badge>
+                                                    <div className="flex gap-2">
+                                                        <span className="badge-orange">{model.cpv_rate.toFixed(2)} CPV</span>
+                                                        {model.cpc_rate > 0 && (
+                                                            <span className="badge-blue">{model.cpc_rate.toFixed(2)} CPC</span>
+                                                        )}
+                                                    </div>
                                                 </TableCell>
                                                 <TableCell className="py-4">
-                                                    <p className="text-xs text-muted-foreground max-w-[250px] italic">"{tier.description}"</p>
+                                                    <div className="flex gap-1.5">
+                                                        {model.features?.has_video && <span className="badge-green">Video</span>}
+                                                        {model.features?.has_banner && <span className="badge-blue">Banner</span>}
+                                                        {model.features?.has_cta && <span className="badge-orange">CTA</span>}
+                                                    </div>
                                                 </TableCell>
                                                 <TableCell className="py-4 pr-6 text-right">
-                                                    <div className="flex flex-col items-end">
-                                                        <div className="flex items-center gap-2">
-                                                            <span className="text-lg font-bold text-foreground leading-none">{tier.campaigns}</span>
-                                                            <Badge className="bg-emerald-500/10 text-emerald-600 border-none font-bold text-[9px]">ACTIVE</Badge>
-                                                        </div>
-                                                        <span className="text-[9px] font-bold text-muted-foreground uppercase mt-1">Total Linked</span>
-                                                    </div>
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50 hover:text-red-500"
+                                                            onClick={() => handleUpdateModel(model._id, { active: false })}>
+                                                        <Trash2 className="h-3.5 w-3.5" />
+                                                    </Button>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -241,12 +337,12 @@ export default function AdminBudgetPage() {
                         </Card>
                     </TabsContent>
 
-                    <TabsContent value="transactions" className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
-                        <Card className="border border-border/50 shadow-sm bg-background/50 backdrop-blur-sm rounded-2xl overflow-hidden">
-                            <CardHeader className="bg-secondary/10 border-b border-border/50 py-4 px-6">
+                    <TabsContent value="transactions" className="space-y-5">
+                        <Card className="card-elevated border-0 rounded-2xl overflow-hidden">
+                            <CardHeader className="border-b border-border/40 py-4 px-6">
                                 <div className="flex items-center gap-2">
-                                    <History className="h-4.5 w-4.5 text-primary" />
-                                    <CardTitle className="text-lg font-bold text-foreground">Platform Transaction History</CardTitle>
+                                    <History className="h-4 w-4 text-primary" />
+                                    <CardTitle className="text-base font-bold text-foreground">Platform Transaction History</CardTitle>
                                 </div>
                                 <CardDescription className="text-xs text-muted-foreground">Monitor all top-ups and deductions across the platform.</CardDescription>
                             </CardHeader>
@@ -263,20 +359,22 @@ export default function AdminBudgetPage() {
                                     </TableHeader>
                                     <TableBody>
                                         {data?.recent_transactions?.map((t: any) => (
-                                            <TableRow key={t.id} className="hover:bg-secondary/10 transition-colors border-b border-border/50 group">
+                                            <TableRow key={t.id} className="hover:bg-primary/[0.02] transition-colors border-b border-border/40 group">
                                                 <TableCell className="py-4 pl-6">
-                                                    <span className="font-bold text-sm block text-foreground">{t.marketer || 'Unknown'} Marketer</span>
+                                                    <span className="font-bold text-sm block text-foreground">{t.marketer || 'Unknown'}</span>
                                                 </TableCell>
                                                 <TableCell className="py-4">
-                                                    <Badge className={t.type === 'topup' ? 'bg-emerald-500/10 text-emerald-600 border-none' : 'bg-rose-500/10 text-rose-600 border-none'}>
-                                                        {t.type.toUpperCase()}
-                                                    </Badge>
+                                                    <span className={t.type === 'topup' ? 'badge-green' : 'badge-red'}>
+                                                        {t.type === 'topup' ? '↑ Top-up' : '↓ Deduction'}
+                                                    </span>
                                                 </TableCell>
-                                                <TableCell className="py-4 font-mono font-bold text-foreground">
-                                                    {t.type === 'topup' ? '+' : '-'}{t.amount.toLocaleString()} Br.
+                                                <TableCell className="py-4">
+                                                    <span className={`font-mono font-bold tabular-nums ${t.type === 'topup' ? 'text-green-600' : 'text-red-500'}`}>
+                                                        {t.type === 'topup' ? '+' : '-'}{t.amount.toLocaleString()} Br.
+                                                    </span>
                                                 </TableCell>
-                                                <TableCell className="py-4 italic text-muted-foreground text-xs">
-                                                    {t.reason || 'No reason provided'}
+                                                <TableCell className="py-4 text-muted-foreground text-xs">
+                                                    {t.reason || '—'}
                                                 </TableCell>
                                                 <TableCell className="py-4 pr-6 text-right text-xs text-muted-foreground">
                                                     {t.timestamp ? format(new Date(t.timestamp), 'MMM dd, HH:mm') : 'N/A'}
@@ -297,9 +395,9 @@ export default function AdminBudgetPage() {
                     </TabsContent>
 
 
-                    <TabsContent value="settings" className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
-                        <Card className="border border-border/50 shadow-sm bg-background/50 backdrop-blur-sm rounded-2xl overflow-hidden">
-                            <CardHeader className="bg-secondary/10 border-b border-border/50 py-4 px-6">
+                    <TabsContent value="settings" className="space-y-5">
+                        <Card className="card-elevated border-0 rounded-2xl overflow-hidden">
+                            <CardHeader className="border-b border-border/40 py-4 px-6">
                                 <div className="flex items-center gap-2">
                                     <Lock className="h-4 w-4 text-primary" />
                                     <CardTitle className="text-lg font-bold">Financial Enforcement</CardTitle>
@@ -369,11 +467,12 @@ export default function AdminBudgetPage() {
                                 </div>
 
                                 <div className="flex justify-end items-center gap-3 pt-4 border-t border-border/30">
-                                    <Button variant="ghost" className="h-10 px-6 rounded-xl font-bold text-xs uppercase text-muted-foreground">
+                                    <Button variant="ghost" className="h-10 px-6 rounded-xl font-semibold text-xs text-muted-foreground">
                                         Reset Changes
                                     </Button>
-                                    <Button onClick={handleSave} className="h-10 px-8 rounded-xl font-bold text-sm gap-2">
-                                        <Save className="h-4 w-4" /> Save Pricing Policies
+                                    <Button onClick={handleSave} className="h-10 px-6 rounded-xl font-bold text-sm gap-2 text-white"
+                                            style={{ background: 'linear-gradient(135deg, hsl(24,100%,50%), hsl(34,100%,55%))' }}>
+                                        <Save className="h-4 w-4" /> Save Policies
                                     </Button>
                                 </div>
                             </CardContent>

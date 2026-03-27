@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from "react";
 import {
@@ -30,6 +31,7 @@ import AdminLayout from "@/components/AdminLayout";
 import KPICard from "@/components/analytics/KPICard";
 import ExportButton from "@/components/analytics/ExportButton";
 import RealTimeIndicator from "@/components/analytics/RealTimeIndicator";
+import { analyticsAPI } from "@/services/api";
 import {
     Card,
     CardContent,
@@ -76,8 +78,7 @@ export default function AdminFraudPage() {
 
     const fetchDashboard = async () => {
         try {
-            const res = await fetch(API_ENDPOINTS.ANALYTICS.ADMIN_FRAUD);
-            const data = await res.json();
+            const data = await analyticsAPI.getAdminFraud();
 
             if (!data?.status) return;
 
@@ -104,17 +105,17 @@ export default function AdminFraudPage() {
         );
     }
 
-    const displayThreats = suspiciousActivity.length > 0 ? suspiciousActivity.map((a, i) => ({
+    const displayThreats = suspiciousActivity.map((a, i) => ({
         id: a.id || i,
         type: a.type,
         ip: a.ip || "Unknown",
         location: a.location || "Internal",
-        time: new Date(a.timestamp).toLocaleTimeString(),
-        severity: a.confidence > 80 ? "high" : a.confidence > 50 ? "medium" : "low",
+        time: a.timestamp ? new Date(a.timestamp).toLocaleTimeString() : "-",
+        severity: (a.confidence || 0) > 80 ? "high" : (a.confidence || 0) > 50 ? "medium" : "low",
         status: "blocked"
-    })) : recentThreatsData;
+    }));
 
-    const displayBlocked = blockedIPs.length > 0 ? blockedIPs : blockedIpsData;
+    const displayBlocked = blockedIPs;
 
     return (
         <AdminLayout title="Fraud & Security">
@@ -185,42 +186,50 @@ export default function AdminFraudPage() {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {displayThreats.map((threat) => (
-                                            <TableRow key={threat.id} className="hover:bg-secondary/10 transition-colors border-b border-border/50">
-                                                <TableCell className="py-4 pl-6">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${threat.severity === 'high' ? 'bg-rose-50 border-rose-100 text-rose-600' : 'bg-amber-50 border-amber-100 text-amber-600'}`}>
-                                                            {threat.severity === 'high' ? <ShieldAlert className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
-                                                        </div>
-                                                        <span className="font-bold text-sm">{threat.type}</span>
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell className="py-4">
-                                                    <div className="flex flex-col">
-                                                        <span className="font-mono text-xs font-bold text-foreground">{threat.ip}</span>
-                                                        <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                                                            <MapPin className="h-3 w-3" /> {threat.location}
-                                                        </span>
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell className="py-4 font-mono text-xs text-muted-foreground">
-                                                    {threat.time}
-                                                </TableCell>
-                                                <TableCell className="py-4 text-center">
-                                                    <Badge variant="outline" className={`font-bold text-[9px] px-2 py-0 border-none ${threat.severity === 'high' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'}`}>
-                                                        {threat.severity?.toUpperCase() || ''}
-                                                    </Badge>
-                                                </TableCell>
-                                                <TableCell className="py-4 pr-6 text-right">
-                                                    <div className="flex flex-col items-end gap-1">
-                                                        <Badge className={`text-[9px] font-bold px-2 py-0 ${threat.status === 'blocked' ? 'bg-rose-500' : 'bg-amber-500'}`}>
-                                                            {threat.status?.toUpperCase() || ''}
-                                                        </Badge>
-                                                        <Button variant="link" className="h-auto p-0 text-[10px] font-bold text-primary">Details</Button>
-                                                    </div>
+                                         {displayThreats.length === 0 ? (
+                                            <TableRow>
+                                                <TableCell colSpan={5} className="py-12 text-center text-muted-foreground italic text-sm">
+                                                    No suspicious activity detected in the last scan.
                                                 </TableCell>
                                             </TableRow>
-                                        ))}
+                                         ) : (
+                                            displayThreats.map((threat) => (
+                                                <TableRow key={threat.id} className="hover:bg-secondary/10 transition-colors border-b border-border/50">
+                                                    <TableCell className="py-4 pl-6">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${threat.severity === 'high' ? 'bg-rose-50 border-rose-100 text-rose-600' : 'bg-amber-50 border-amber-100 text-amber-600'}`}>
+                                                                {threat.severity === 'high' ? <ShieldAlert className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
+                                                            </div>
+                                                            <span className="font-bold text-sm">{threat.type}</span>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="py-4">
+                                                        <div className="flex flex-col">
+                                                            <span className="font-mono text-xs font-bold text-foreground">{threat.ip}</span>
+                                                            <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                                                                <MapPin className="h-3 w-3" /> {threat.location}
+                                                            </span>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="py-4 font-mono text-xs text-muted-foreground">
+                                                        {threat.time}
+                                                    </TableCell>
+                                                    <TableCell className="py-4 text-center">
+                                                        <Badge variant="outline" className={`font-bold text-[9px] px-2 py-0 border-none ${threat.severity === 'high' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'}`}>
+                                                            {threat.severity?.toUpperCase() || ''}
+                                                        </Badge>
+                                                    </TableCell>
+                                                    <TableCell className="py-4 pr-6 text-right">
+                                                        <div className="flex flex-col items-end gap-1">
+                                                            <Badge className={`text-[9px] font-bold px-2 py-0 ${threat.status === 'blocked' ? 'bg-rose-500' : 'bg-amber-500'}`}>
+                                                                {threat.status?.toUpperCase() || ''}
+                                                            </Badge>
+                                                            <Button variant="link" className="h-auto p-0 text-[10px] font-bold text-primary">Details</Button>
+                                                        </div>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))
+                                         )}
                                     </TableBody>
                                 </Table>
                                 <div className="p-4 border-t border-border/50 text-center">
@@ -257,27 +266,35 @@ export default function AdminFraudPage() {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {displayBlocked.map((info, i) => (
-                                            <TableRow key={info.ip || i} className="hover:bg-rose-50/10 transition-colors border-b border-border/50">
-                                                <TableCell className="py-4 pl-6">
-                                                    <span className="font-mono text-sm font-bold text-rose-600">{info.ip}</span>
-                                                </TableCell>
-                                                <TableCell className="py-4">
-                                                    <div className="flex flex-col">
-                                                        <span className="font-semibold text-sm">{info.reason}</span>
-                                                        <span className="text-[10px] text-rose-400 font-bold">Confirmed</span>
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell className="py-4 font-mono text-xs text-muted-foreground">
-                                                    {info.blockedAt}
-                                                </TableCell>
-                                                <TableCell className="py-4 pr-6 text-right">
-                                                    <Badge variant="outline" className="border-rose-200 text-rose-700 bg-rose-50 text-[9px] font-bold">
-                                                        {info.duration?.toUpperCase() || ''}
-                                                    </Badge>
+                                         {displayBlocked.length === 0 ? (
+                                            <TableRow>
+                                                <TableCell colSpan={4} className="py-12 text-center text-muted-foreground italic text-sm">
+                                                    No IP addresses are currently blacklisted.
                                                 </TableCell>
                                             </TableRow>
-                                        ))}
+                                         ) : (
+                                            displayBlocked.map((info, i) => (
+                                                <TableRow key={info.ip || i} className="hover:bg-rose-50/10 transition-colors border-b border-border/50">
+                                                    <TableCell className="py-4 pl-6">
+                                                        <span className="font-mono text-sm font-bold text-rose-600">{info.ip}</span>
+                                                    </TableCell>
+                                                    <TableCell className="py-4">
+                                                        <div className="flex flex-col">
+                                                            <span className="font-semibold text-sm">{info.reason}</span>
+                                                            <span className="text-[10px] text-rose-400 font-bold">Confirmed</span>
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell className="py-4 font-mono text-xs text-muted-foreground">
+                                                        {info.blockedAt}
+                                                    </TableCell>
+                                                    <TableCell className="py-4 pr-6 text-right">
+                                                        <Badge variant="outline" className="border-rose-200 text-rose-700 bg-rose-50 text-[9px] font-bold">
+                                                            {info.duration?.toUpperCase() || ''}
+                                                        </Badge>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))
+                                         )}
                                     </TableBody>
                                 </Table>
                             </CardContent>

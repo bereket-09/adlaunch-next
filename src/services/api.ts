@@ -4,7 +4,8 @@ import { API_ENDPOINTS } from '@/config/api';
 // Generic fetch wrapper with error handling
 async function fetchAPI<T>(
   url: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  retries = 3
 ): Promise<T> {
   const headers = new Headers(options.headers);
 
@@ -13,8 +14,6 @@ async function fetchAPI<T>(
     const token = localStorage.getItem('token');
     if (token && token !== 'undefined' && token !== 'null') {
       headers.set('authorization', `Bearer ${token}`);
-    } else {
-      console.warn("[fetchAPI] No valid token found in localStorage for:", url);
     }
   }
 
@@ -25,41 +24,57 @@ async function fetchAPI<T>(
     }
   }
 
-  // Convert Headers instance to plain object to ensure compatibility with all fetch implementations
   const headersObj: Record<string, string> = {};
   headers.forEach((value, key) => {
     headersObj[key.toLowerCase()] = value;
   });
 
-  // if (typeof window !== "undefined") {
-  //   console.log(`[fetchAPI] Calling ${url} with header keys:`, Object.keys(headersObj));
-  // }
-
-  const response = await fetch(url, {
-    ...options,
-    headers: headersObj,
-  });
-
-  // Log headers for debugging (client-side only)
-  if (typeof window !== 'undefined' && url.includes('/analytics/')) {
-    console.log(`[fetchAPI] Request to ${url} with Auth:`, !!headers.get('Authorization'));
-  }
-
-  // Try parsing JSON safely
-  let data: any;
   try {
-    console.log("🚀 ~ fetchAPI ~ response:", response)
-    data = await response.json();
-    console.log("🚀 ~ fetchAPI ~ data:", data)
-  } catch (err) {
-    throw new Error('Invalid JSON response from server');
-  }
+    const response = await fetch(url, {
+      ...options,
+      headers: headersObj,
+      cache: 'no-store', // Always disable caching
+    });
 
-  if (!response.ok) {
-    throw new Error(data.error || data.message || 'API request failed');
-  }
+    // Handle 401 Unauthorized
+    if (response.status === 401) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('marketer_id');
+        window.location.href = '/login';
+      }
+      throw new Error('Session expired. Please login again.');
+    }
 
-  return data;
+    // Try parsing JSON safely
+    let data: any;
+    try {
+      data = await response.json();
+    } catch (err) {
+      throw new Error('Invalid JSON response from server');
+    }
+
+    if (!response.ok) {
+        // If it's a server error (5xx) and we have retries left, try again
+        if (response.status >= 500 && retries > 0) {
+            console.warn(`[fetchAPI] Server error (${response.status}). Retrying... (${retries} left)`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return fetchAPI(url, options, retries - 1);
+        }
+      throw new Error(data?.error || data?.message || 'API request failed');
+    }
+
+    return data;
+  } catch (err: any) {
+    // If it's a network error (TypeError: fetch failed) and we have retries left, try again
+    if (err.name === 'TypeError' && retries > 0) {
+        console.warn(`[fetchAPI] Network error. Retrying... (${retries} left)`);
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        return fetchAPI(url, options, retries - 1);
+    }
+    throw err;
+  }
 }
 
 
@@ -69,7 +84,10 @@ async function fetchAPI<T>(
  */
 // Fetch media (video, audio, images, etc.) as Blob
 export async function fetchMedia(url: string, options: RequestInit = {}): Promise<Blob> {
-  const response = await fetch(url, options);
+  const response = await fetch(url, {
+      ...options,
+      cache: 'no-store'
+  });
 
   if (!response.ok) {
     throw new Error(`Failed to fetch media: ${response.statusText}`);
@@ -160,9 +178,16 @@ export interface AdCreateRequest {
   cost_per_view: number;
   budget_allocation: number;
   video_description?: string;
-  video_file?: File; // <-- actual File object for upload
+  video_file?: File;
+  banner_file?: File; // New
+  cta_text?: string;
+  cta_link?: string;
+  payment_type?: string;
+  billing_model?: string;
+  cost_per_click?: number;
   start_date: string;
   end_date: string;
+  reward_description?: string;
 }
 
 export interface AdUpdateRequest {
@@ -174,6 +199,7 @@ export interface AdUpdateRequest {
   start_date?: string;
   end_date?: string;
   status?: string;
+  reward_description?: string;
 }
 
 // export interface AdUpdateRequest {
@@ -200,9 +226,9 @@ export const adAPI = {
   create: async (data: AdCreateRequest): Promise<{ status: boolean; ad: Ad; error?: string }> => {
     const formData = new FormData();
 
-    // Append all fields
+    // Append all fields except files
     Object.entries(data).forEach(([key, value]) => {
-      if (value !== undefined && key !== "video_file") {
+      if (value !== undefined && key !== "video_file" && key !== "banner_file") {
         formData.append(key, String(value));
       }
     });
@@ -211,10 +237,15 @@ export const adAPI = {
     if (data.video_file) {
       formData.append("video", data.video_file, data.video_file.name);
     }
+    
+    // Append the banner file
+    if (data.banner_file) {
+      formData.append("banner", data.banner_file, data.banner_file.name);
+    }
 
     return fetchAPI(API_ENDPOINTS.AD.CREATE, {
       method: 'POST',
-      body: formData, // Multer expects FormData
+      body: formData,
     });
   },
 
@@ -230,10 +261,13 @@ export const adAPI = {
       body: JSON.stringify(data),
     }),
 
-  getVideo: (adID: any): Promise<any> =>
+    getVideo: (adID: any): Promise<any> =>
     fetchMedia(API_ENDPOINTS.AD.VIDEO(adID), {
       method: 'GET'
-    })
+    }),
+
+  recordClick: (token: string) =>
+    fetchAPI(`/ad/click/${token}`, { method: 'POST' }),
 };
 
 
@@ -250,7 +284,16 @@ export interface Marketer {
   company_name?: string;
   business_reg_number?: string;
   business_address?: string;
+  business_category?: string;
+  contact_person?: {
+    name?: string;
+    phone?: string;
+    position?: string;
+  };
   kyc_info?: any;
+  admin_comments?: string;
+  kyc_status?: string;
+  kyc_documents?: any[];
   status: 'active' | 'pending' | 'rejected' | 'pendingPassChange' | 'deactivated' | 'inactive';
   created_at: string;
   total_ads?: number;
@@ -261,10 +304,15 @@ export interface Marketer {
 export interface MarketerCreateRequest {
   name: string;
   email: string;
-  password: string;
+  password?: string;
   total_budget: number;
   contact_info: string;
+  company_name?: string;
+  business_reg_number?: string;
+  business_address?: string;
   status?: string;
+  admin_comments?: string;
+  kyc_status?: string;
 }
 
 export interface MarketerUpdateRequest {
@@ -272,7 +320,12 @@ export interface MarketerUpdateRequest {
   email?: string;
   total_budget?: number;
   contact_info?: string;
+  company_name?: string;
+  business_reg_number?: string;
+  business_address?: string;
   status?: string;
+  admin_comments?: string;
+  kyc_status?: string;
 }
 
 export const marketerAPI = {
@@ -293,6 +346,16 @@ export const marketerAPI = {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
+
+  uploadKYCDoc: (id: string, file: File, docType: string): Promise<any> => {
+    const formData = new FormData();
+    formData.append('document', file);
+    formData.append('doc_type', docType);
+    return fetchAPI(API_ENDPOINTS.MARKETER.KYC(id), {
+        method: 'POST',
+        body: formData
+    });
+  }
 };
 
 // ============ Budget API ============
@@ -536,6 +599,27 @@ export const blacklistAPI = {
 
   permanentDelete: (id: string): Promise<any> =>
     fetchAPI(API_ENDPOINTS.BLACKLIST.PERMANENT_DELETE(id), {
+      method: 'DELETE',
+    }),
+};
+export const billingModelAPI = {
+  list: (): Promise<{ status: boolean; models: any[] }> =>
+    fetchAPI(API_ENDPOINTS.BILLING_MODEL.LIST),
+
+  create: (data: any): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.BILLING_MODEL.CREATE, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  update: (id: string, data: any): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.BILLING_MODEL.UPDATE(id), {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  delete: (id: string): Promise<any> =>
+    fetchAPI(API_ENDPOINTS.BILLING_MODEL.DELETE(id), {
       method: 'DELETE',
     }),
 };

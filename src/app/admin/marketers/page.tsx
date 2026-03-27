@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from "react";
 import {
@@ -230,7 +231,12 @@ export default function AdminMarketersPage() {
 
     const handleApprove = async (id: string) => {
         try {
-            await marketerAPI.update(id, { status: "active" });
+            const comments = (kycMarketer?._id === id) ? kycMarketer.admin_comments : "";
+            await marketerAPI.update(id, { 
+                status: "active", 
+                kyc_status: "verified",
+                admin_comments: comments 
+            });
             toast({ title: "Application Approved", description: "Marketer account is now active." });
             fetchMarketers();
         } catch (error) {
@@ -240,7 +246,12 @@ export default function AdminMarketersPage() {
 
     const handleReject = async (id: string) => {
         try {
-            await marketerAPI.update(id, { status: "rejected" });
+            const comments = (kycMarketer?._id === id) ? kycMarketer.admin_comments : "";
+            await marketerAPI.update(id, { 
+                status: "rejected",
+                kyc_status: "rejected", 
+                admin_comments: comments 
+            });
             toast({ title: "Application Rejected" });
             fetchMarketers();
         } catch (error) {
@@ -279,7 +290,7 @@ export default function AdminMarketersPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <KPICard title="Total Portfolio Balance" value={`${totalPortfolioBudget.toLocaleString()} Br.`} icon={Wallet} trend="up" change={5.2} />
                     <KPICard title="Active Accounts" value={marketers.filter(m => m.status === 'active').length} icon={ShieldCheck} trend="neutral" />
-                    <KPICard title="New Requests" value="4" icon={Users} trend="up" />
+                    <KPICard title="New Requests" value={marketers.filter(m => m.status === 'pending').length.toString()} icon={Users} trend="up" />
                     <KPICard title="Avg. Balance" value={`${(totalPortfolioBudget / (marketers.length || 1)).toLocaleString(undefined, { maximumFractionDigits: 0 })} Br.`} icon={TrendingUp} trend="neutral" />
                 </div>
 
@@ -571,76 +582,126 @@ export default function AdminMarketersPage() {
                     </DialogContent>
                 </Dialog>
 
-                {/* KYC Details Modal */}
+                {/* KYC Details Modal - Enhanced with Edit & Feedback */}
                 <Dialog open={isKYCOpen} onOpenChange={setIsKYCOpen}>
                     <DialogContent className="sm:max-w-2xl rounded-2xl border border-border/50 bg-background p-0 overflow-hidden shadow-3xl">
                         <div className="p-6 bg-primary/10 border-b border-border/50">
                             <DialogHeader>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary border border-primary/30">
-                                        <SearchCode className="h-6 w-6" />
+                                <div className="flex items-center justify-between gap-3">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary border border-primary/30">
+                                            <SearchCode className="h-6 w-6" />
+                                        </div>
+                                        <div>
+                                            <DialogTitle className="text-xl font-bold italic uppercase tracking-tight">Compliance Editor</DialogTitle>
+                                            <DialogDescription className="text-xs font-bold text-primary/70 uppercase">Verify & Manage Business Identity</DialogDescription>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <DialogTitle className="text-xl font-bold italic uppercase tracking-tight">Compliance Review</DialogTitle>
-                                        <DialogDescription className="text-xs font-bold text-primary/70 uppercase">KYC & Business Documentation</DialogDescription>
-                                    </div>
+                                    {kycMarketer && getStatusBadge(kycMarketer.status)}
                                 </div>
                             </DialogHeader>
                         </div>
 
                         {kycMarketer && (
-                            <div className="p-8 space-y-8">
-                                <div className="grid grid-cols-2 gap-8">
+                            <div className="p-8 space-y-6 overflow-y-auto max-h-[70vh]">
+                                <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1.5">
-                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Full Name</Label>
-                                        <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-bold text-sm">{kycMarketer.name}</div>
+                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Marketer Display Name</Label>
+                                        <Input 
+                                            value={kycMarketer.name} 
+                                            onChange={(e) => setKycMarketer({...kycMarketer, name: e.target.value})}
+                                            className="h-10 rounded-xl bg-secondary/10 border-border/50 font-bold"
+                                        />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Email Address</Label>
-                                        <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-bold text-sm">{kycMarketer.email}</div>
+                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Primary Email</Label>
+                                        <Input 
+                                            value={kycMarketer.email} 
+                                            disabled
+                                            className="h-10 rounded-xl bg-secondary/5 border-border/50 font-medium opacity-70"
+                                        />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Company Entity</Label>
-                                        <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-bold text-sm">{kycMarketer.company_name || "N/A"}</div>
+                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Legal Company Entity</Label>
+                                        <Input 
+                                            value={kycMarketer.company_name || ""} 
+                                            onChange={(e) => setKycMarketer({...kycMarketer, company_name: e.target.value})}
+                                            className="h-10 rounded-xl bg-secondary/10 border-border/50 font-bold"
+                                            placeholder="Not provided"
+                                        />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Registration #</Label>
-                                        <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-mono font-bold text-sm">{kycMarketer.business_reg_number || "N/A"}</div>
+                                        <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Registration Number</Label>
+                                        <Input 
+                                            value={kycMarketer.business_reg_number || ""} 
+                                            onChange={(e) => setKycMarketer({...kycMarketer, business_reg_number: e.target.value})}
+                                            className="h-10 rounded-xl bg-secondary/10 border-border/50 font-mono font-bold"
+                                            placeholder="N/A"
+                                        />
                                     </div>
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Principal Business Address</Label>
-                                    <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-medium text-sm leading-relaxed">{kycMarketer.business_address || "N/A"}</div>
+                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Business Address</Label>
+                                    <Input 
+                                        value={kycMarketer.business_address || ""} 
+                                        onChange={(e) => setKycMarketer({...kycMarketer, business_address: e.target.value})}
+                                        className="h-10 rounded-xl bg-secondary/10 border-border/50 font-medium"
+                                        placeholder="Full business location..."
+                                    />
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Primary Contact / Phone</Label>
-                                    <div className="p-3.5 bg-secondary/20 rounded-xl border border-border/50 font-bold text-sm">{kycMarketer.contact_info || "N/A"}</div>
+                                    <Label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Admin Feedback / Correction Comments</Label>
+                                    <textarea 
+                                        value={kycMarketer.admin_comments || ""} 
+                                        onChange={(e) => setKycMarketer({...kycMarketer, admin_comments: e.target.value})}
+                                        placeholder="Add instructions or reasons for rejection/update request..."
+                                        className="w-full min-h-[100px] p-4 bg-amber-50/30 border border-amber-100 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-amber-900/30"
+                                    />
                                 </div>
 
-                                {kycMarketer.status === 'pending' && (
-                                    <div className="flex gap-4 pt-4 border-t border-border/50">
-                                        <Button
-                                            variant="destructive"
-                                            className="flex-1 h-12 rounded-xl font-bold uppercase tracking-widest text-xs"
-                                            onClick={() => { handleReject(kycMarketer._id); setIsKYCOpen(false); }}
-                                        >
-                                            Reject Application
-                                        </Button>
-                                        <Button
-                                            className="flex-2 h-12 rounded-xl font-bold uppercase tracking-widest text-xs px-12"
-                                            onClick={() => { handleApprove(kycMarketer._id); setIsKYCOpen(false); }}
-                                        >
-                                            Approve Partner
-                                        </Button>
-                                    </div>
-                                )}
+                                <div className="flex gap-4 pt-4 border-t border-border/50">
+                                    <Button
+                                        variant="outline"
+                                        className="flex-1 h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-all"
+                                        onClick={() => {
+                                            handleReject(kycMarketer._id);
+                                            setIsKYCOpen(false);
+                                        }}
+                                    >
+                                        Reject & Block
+                                    </Button>
+                                    <Button
+                                        variant="secondary"
+                                        className="flex-1 h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] bg-secondary border border-border/60"
+                                        onClick={async () => {
+                                            await marketerAPI.update(kycMarketer._id, { 
+                                                ...kycMarketer,
+                                                kyc_status: 'rejected' // Request Update state
+                                            });
+                                            toast({ title: "Update Requested", description: "Comments sent to advertiser." });
+                                            setIsKYCOpen(false);
+                                            fetchMarketers();
+                                        }}
+                                    >
+                                        Request Fixes
+                                    </Button>
+                                    <Button
+                                        className="flex-2 h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] px-8 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg"
+                                        onClick={() => {
+                                            handleApprove(kycMarketer._id);
+                                            setIsKYCOpen(false);
+                                        }}
+                                    >
+                                        Final Approval
+                                    </Button>
+                                </div>
                             </div>
                         )}
 
                         <div className="p-4 bg-secondary/10 border-t border-border/50 text-center">
-                            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.3em]">AdLaunch Compliance Engine v2.0</p>
+                            <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.3em]">Compliance Lifecycle Management System</p>
                         </div>
                     </DialogContent>
                 </Dialog>

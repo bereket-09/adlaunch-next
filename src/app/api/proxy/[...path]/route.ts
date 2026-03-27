@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// const BACKEND_URL = 'https://adplus-backend.onrender.com/api/v1';
+const BACKEND_URL = 'https://adplus-backend.onrender.com/api/v1';
 
-const BACKEND_URL = 'http://localhost:3001/api/v1';
+// const BACKEND_URL = 'http://localhost:3001/api/v1';
 
 // Bypass SSL certificate issues in development
 if (process.env.NODE_ENV === 'development') {
@@ -79,14 +79,24 @@ async function handleRequest(request: NextRequest, pathSegments: string[]) {
             headers,
             body,
             cache: 'no-store',
+            redirect: 'manual', // Don't follow redirects, let the client do it
         });
+
+        // If it's a redirect, just pass it through
+        if (response.status >= 300 && response.status < 400) {
+            const redirectUrl = response.headers.get('location');
+            if (redirectUrl) {
+                return NextResponse.redirect(redirectUrl, {
+                    status: response.status as 301 | 302 | 303 | 307 | 308,
+                });
+            }
+        }
 
         const responseData = await response.arrayBuffer();
 
         // Create new headers for the response
         const responseHeaders = new Headers();
         response.headers.forEach((value, key) => {
-            // SKIP content-encoding and content-length as we are sending a fresh buffer
             if (!['content-encoding', 'content-length'].includes(key.toLowerCase())) {
                 responseHeaders.set(key, value);
             }

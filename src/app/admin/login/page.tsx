@@ -84,14 +84,14 @@ export default function AdminLoginPage() {
                         </div>
                         <div className="space-y-2">
                             <h1 className="text-4xl font-black tracking-tight text-slate-900 uppercase italic">Admin Portal</h1>
-                            <p className="text-slate-500 text-sm font-medium uppercase tracking-widest text-[10px]">Ethiopia Platform Management</p>
+                            <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Platform Management</p>
                         </div>
                     </div>
 
                     <div className="bg-white border border-slate-100 p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200/50">
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-2">
-                                <Label htmlFor="email" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Email Terminal</Label>
+                                <Label htmlFor="email" className="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1">Email Address</Label>
                                 <div className="relative group">
                                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                     <Input
@@ -100,14 +100,14 @@ export default function AdminLoginPage() {
                                         placeholder="admin@adrewards.et"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="bg-slate-50 border-slate-100 text-slate-900 pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all placeholder:text-slate-300"
+                                        className="bg-slate-50/50 border-slate-100 text-slate-900 pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-slate-300"
                                         required
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="password" title="Your Security Passkey" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Security Passkey</Label>
+                                <Label htmlFor="password" title="Your Security Passkey" className="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1">Password</Label>
                                 <div className="relative group">
                                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                     <Input
@@ -116,7 +116,7 @@ export default function AdminLoginPage() {
                                         placeholder="••••••••"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="bg-slate-50 border-slate-100 text-slate-900 pl-12 pr-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all placeholder:text-slate-300"
+                                        className="bg-slate-50/50 border-slate-100 text-slate-900 pl-12 pr-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-slate-300"
                                         required
                                     />
                                     <button
@@ -132,17 +132,17 @@ export default function AdminLoginPage() {
                             <Button
                                 type="submit"
                                 variant="gradient"
-                                className="w-full h-15 rounded-2xl text-lg font-black tracking-widest uppercase italic shadow-2xl active:scale-[0.98] transition-all hover:opacity-95"
+                                className="w-full h-14 rounded-2xl text-lg font-black tracking-widest uppercase italic shadow-orange-glow active:scale-[0.98] transition-all hover:opacity-95"
                                 disabled={isLoading}
                                 size="lg"
                             >
                                 {isLoading ? (
                                     <span className="flex items-center gap-3">
                                         <div className="h-5 w-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                        Checking...
+                                        Verifying...
                                     </span>
                                 ) : (
-                                    "Access Portal"
+                                    "Sign In"
                                 )}
                             </Button>
                         </form>
@@ -151,33 +151,33 @@ export default function AdminLoginPage() {
                     <div className="flex flex-col items-center gap-6">
                         <Link
                             href="/marketer/login"
-                            className="text-[10px] font-black text-slate-400 hover:text-primary uppercase tracking-[0.3em] transition-all"
+                            className="text-[10px] font-black text-slate-400 hover:text-primary uppercase tracking-widest transition-all"
                         >
-                            ← Switch to Partner Hub
+                            ← Switch to Marketer Hub
                         </Link>
                         <Logo size="sm" className="opacity-40 grayscale hover:grayscale-0 transition-all" />
                     </div>
                 </div>
             </div>
 
-            <div className="hidden xl:flex flex-1 items-center justify-center p-20 bg-slate-50 relative overflow-hidden underline-none">
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,109,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,109,0,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+            <div className="hidden xl:flex flex-1 items-center justify-center p-20 bg-slate-950 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-orange-600/5" />
                 <div className="relative">
-                    <div className="absolute inset-0 bg-primary/10 rounded-full blur-[120px] animate-pulse" />
-                    <div className="relative border border-slate-200 bg-white/80 backdrop-blur-3xl p-16 rounded-[4rem] max-w-xl space-y-8 shadow-2xl shadow-slate-200/50">
+                    <div className="absolute inset-0 bg-primary/20 rounded-full blur-[120px] animate-pulse" />
+                    <div className="relative border border-white/10 bg-black/40 backdrop-blur-3xl p-16 rounded-[4rem] max-w-xl space-y-8 shadow-2xl">
                         <div className="h-1.5 w-24 bg-gradient-to-r from-primary to-orange-600 rounded-full" />
-                        <h2 className="text-5xl font-black text-slate-900 leading-[1.1] tracking-tight uppercase italic">Secure <br /> <span className="text-primary italic">Oversight.</span></h2>
-                        <p className="text-slate-500 text-xl font-medium leading-relaxed">
-                            A comprehensive node for strategic management of the AdRewards Ethiopia network.
+                        <h2 className="text-5xl font-black text-white leading-[1.1] tracking-tight italic uppercase">Management <br /> <span className="text-primary italic">Control.</span></h2>
+                        <p className="text-slate-400 text-xl font-medium leading-relaxed">
+                            Comprehensive oversight of the regional digital advertising network.
                         </p>
                         <div className="grid grid-cols-2 gap-12 pt-8">
                             <div className="space-y-2">
-                                <p className="text-3xl font-black text-slate-900 italic">99.9%</p>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Network Uptime</p>
+                                <p className="text-3xl font-black text-white italic">99.9%</p>
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Network Uptime</p>
                             </div>
                             <div className="space-y-2">
-                                <p className="text-3xl font-black text-slate-900 italic">10M+</p>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Audience Segments</p>
+                                <p className="text-3xl font-black text-white italic">10M+</p>
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Engagements</p>
                             </div>
                         </div>
                     </div>

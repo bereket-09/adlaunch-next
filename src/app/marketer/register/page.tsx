@@ -71,7 +71,7 @@ export default function MarketerRegisterPage() {
 
     if (isSubmitted) {
         return (
-            <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center p-8 text-center overflow-hidden">
+            <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center overflow-hidden font-sans">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
 
                 <div className="relative z-10 space-y-12 max-w-xl w-full">
@@ -79,24 +79,24 @@ export default function MarketerRegisterPage() {
                         <Logo size="lg" className="mx-auto" />
                     </div>
 
-                    <div className="inline-flex items-center justify-center p-8 bg-emerald-500/10 rounded-[2.5rem] border border-emerald-500/20 shadow-2xl shadow-emerald-500/20 animate-fade-in">
+                    <div className="inline-flex items-center justify-center p-8 bg-emerald-500/5 rounded-[2.5rem] border border-emerald-500/10 shadow-2xl shadow-emerald-500/5 animate-fade-in">
                         <CheckCircle2 className="h-14 w-14 text-emerald-500" />
                     </div>
 
                     <div className="space-y-6">
-                        <h1 className="text-5xl font-black text-white italic uppercase tracking-tight">Application Received</h1>
-                        <p className="text-slate-400 text-xl font-medium leading-relaxed max-w-md mx-auto">
-                            Thank you for your interest in joining our network. Our team is currently reviewing your account details.
+                        <h1 className="text-5xl font-black text-slate-900 italic uppercase tracking-tight">Application Received</h1>
+                        <p className="text-slate-500 text-xl font-medium leading-relaxed max-w-md mx-auto">
+                            Your enrollment in the AdRewards Ethiopia network is under review. Our team will verify your credentials shortly.
                         </p>
                         <div className="pt-4">
-                            <p className="text-slate-500 text-sm font-bold uppercase tracking-[0.2em]">
-                                Expected review within <span className="text-white">24-48 hours</span>
+                            <p className="text-slate-400 text-sm font-bold uppercase tracking-[0.2em]">
+                                Expected review within <span className="text-slate-900">24-48 hours</span>
                             </p>
                         </div>
                     </div>
 
-                    <Button asChild variant="outline" className="w-full max-w-xs mx-auto border-white/5 bg-white/[0.02] text-white hover:bg-white/5 h-14 rounded-2xl font-black uppercase tracking-widest transition-all">
-                        <Link href="/marketer/login">Return to Hub</Link>
+                    <Button asChild variant="outline" className="w-full max-w-xs mx-auto border-slate-100 bg-white text-slate-900 hover:bg-slate-50 h-14 rounded-2xl font-black uppercase tracking-widest transition-all">
+                        <Link href="/marketer/login">Return to Portal</Link>
                     </Button>
                 </div>
             </div>
@@ -104,11 +104,11 @@ export default function MarketerRegisterPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#050505] flex font-sans overflow-x-hidden">
+        <div className="min-h-screen bg-white flex font-sans overflow-x-hidden text-slate-900">
             <div className="flex-1 flex items-center justify-center p-8 sm:p-16 relative overflow-y-auto">
                 {/* Modern Ambient Background */}
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-orange-600/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-orange-600/3 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
                 <div className="w-full max-w-[650px] space-y-12 relative z-10 py-16">
                     <div className="text-center space-y-6">
@@ -116,40 +116,40 @@ export default function MarketerRegisterPage() {
                             <Logo size="lg" className="mx-auto" />
                         </div>
                         <div className="space-y-2">
-                            <h1 className="text-4xl font-black tracking-tight text-white italic uppercase">Partner Enrollment</h1>
-                            <p className="text-slate-400 font-medium text-lg">Enter your details to join the AdRewards advertising network</p>
+                            <h1 className="text-4xl font-black tracking-tight text-slate-900 italic uppercase">Partner Enrollment</h1>
+                            <p className="text-slate-500 font-medium text-lg">Apply for access to Ethiopia's leading ad network</p>
                         </div>
                     </div>
 
-                    <div className="bg-white/[0.02] backdrop-blur-3xl border border-white/5 p-10 rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]">
+                    <div className="bg-slate-50/50 backdrop-blur-3xl border border-slate-100 p-10 rounded-[3rem] shadow-2xl shadow-slate-200/50">
                         <form onSubmit={handleSubmit} className="space-y-10">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-2">
-                                    <Label htmlFor="name" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Full Name</Label>
+                                    <Label htmlFor="name" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Full Name</Label>
                                     <div className="relative group">
-                                        <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
+                                        <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                         <Input
                                             id="name"
-                                            placeholder="Your Name"
+                                            placeholder="Lead Contact"
                                             value={formData.name}
                                             onChange={handleChange}
-                                            className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
+                                            className="bg-white border-slate-100 text-slate-900 pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all font-medium placeholder:text-slate-300"
                                             required
                                         />
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="email" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Business Email</Label>
+                                    <Label htmlFor="email" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Business Email</Label>
                                     <div className="relative group">
-                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
+                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                         <Input
                                             id="email"
                                             type="email"
-                                            placeholder="email@company.com"
+                                            placeholder="corp@brand.et"
                                             value={formData.email}
                                             onChange={handleChange}
-                                            className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
+                                            className="bg-white border-slate-100 text-slate-900 pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all font-medium placeholder:text-slate-300"
                                             required
                                         />
                                     </div>
@@ -157,16 +157,16 @@ export default function MarketerRegisterPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="password" title="Your Account Password" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Choose Password</Label>
+                                <Label htmlFor="password" title="Your Account Password" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Choose Portal Password</Label>
                                 <div className="relative group">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                     <Input
                                         id="password"
                                         type="password"
                                         placeholder="••••••••"
                                         value={formData.password}
                                         onChange={handleChange}
-                                        className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
+                                        className="bg-white border-slate-100 text-slate-900 pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all font-medium placeholder:text-slate-300"
                                         required
                                     />
                                 </div>
@@ -174,30 +174,30 @@ export default function MarketerRegisterPage() {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-2">
-                                    <Label htmlFor="company_name" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Company Name</Label>
+                                    <Label htmlFor="company_name" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Organization Name</Label>
                                     <div className="relative group">
-                                        <Building className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
+                                        <Building className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                         <Input
                                             id="company_name"
-                                            placeholder="Your Organization"
+                                            placeholder="Brand Identity"
                                             value={formData.company_name}
                                             onChange={handleChange}
-                                            className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
+                                            className="bg-white border-slate-100 text-slate-900 pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all font-medium placeholder:text-slate-300"
                                             required
                                         />
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="business_reg_number" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Business License ID</Label>
+                                    <Label htmlFor="business_reg_number" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">TIN or License ID</Label>
                                     <div className="relative group">
-                                        <FileText className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
+                                        <FileText className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                         <Input
                                             id="business_reg_number"
-                                            placeholder="ID-123456"
+                                            placeholder="Ethiopian Reg ID"
                                             value={formData.business_reg_number}
                                             onChange={handleChange}
-                                            className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
+                                            className="bg-white border-slate-100 text-slate-900 pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all font-medium placeholder:text-slate-300"
                                             required
                                         />
                                     </div>
@@ -205,30 +205,30 @@ export default function MarketerRegisterPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="business_address" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Company Address</Label>
+                                <Label htmlFor="business_address" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">HQ Address</Label>
                                 <div className="relative group">
-                                    <MapPin className="absolute left-4 top-4 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
+                                    <MapPin className="absolute left-4 top-4 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                     <Textarea
                                         id="business_address"
-                                        placeholder="Full business address..."
+                                        placeholder="Physical operation address..."
                                         value={formData.business_address}
                                         onChange={handleChange}
-                                        className="bg-black/40 border-white/5 text-white pl-12 min-h-[120px] rounded-[1.5rem] focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium py-4 placeholder:text-slate-800 resize-none"
+                                        className="bg-white border-slate-100 text-slate-900 pl-12 min-h-[120px] rounded-[1.5rem] focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all font-medium py-4 placeholder:text-slate-300 resize-none shadow-sm"
                                         required
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="contact_info" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Primary Contact Number</Label>
+                                <Label htmlFor="contact_info" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Primary Network Number</Label>
                                 <div className="relative group">
-                                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
+                                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                     <Input
                                         id="contact_info"
                                         placeholder="+251 ..."
                                         value={formData.contact_info}
                                         onChange={handleChange}
-                                        className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
+                                        className="bg-white border-slate-100 text-slate-900 pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/10 focus:border-primary/30 transition-all font-medium placeholder:text-slate-300"
                                         required
                                     />
                                 </div>
@@ -237,11 +237,11 @@ export default function MarketerRegisterPage() {
                             <Button
                                 type="submit"
                                 variant="gradient"
-                                className="w-full h-16 rounded-[1.5rem] text-xl font-black tracking-widest uppercase italic shadow-orange-glow active:scale-[0.98] transition-all hover:opacity-95"
+                                className="w-full h-16 rounded-[1.5rem] text-xl font-black tracking-widest uppercase italic shadow-2xl active:scale-[0.98] transition-all hover:opacity-95"
                                 disabled={isLoading}
                                 size="lg"
                             >
-                                {isLoading ? "Processing..." : "Submit Application"}
+                                {isLoading ? "Processing..." : "Enroll Today"}
                             </Button>
                         </form>
                     </div>
@@ -249,9 +249,9 @@ export default function MarketerRegisterPage() {
                     <div className="text-center">
                         <Link
                             href="/marketer/login"
-                            className="text-xs font-black text-slate-500 hover:text-primary uppercase tracking-[0.3em] transition-all"
+                            className="text-[10px] font-black text-slate-400 hover:text-primary uppercase tracking-[0.3em] transition-all"
                         >
-                            ← Back to hub
+                            ← Back to Portal hub
                         </Link>
                     </div>
                 </div>

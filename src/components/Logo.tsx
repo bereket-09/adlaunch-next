@@ -5,9 +5,10 @@ interface LogoProps {
   size?: "sm" | "md" | "lg";
   showText?: boolean;
   className?: string;
+  forceWhite?: boolean;
 }
 
-const Logo = ({ size = "md", showText = true, className }: LogoProps) => {
+const Logo = ({ size = "md", showText = true, className, forceWhite = false }: LogoProps) => {
   const sizeClasses = {
     sm: "h-8 w-8",
     md: "h-10 w-10",
@@ -26,7 +27,7 @@ const Logo = ({ size = "md", showText = true, className }: LogoProps) => {
         <Play className="text-primary-foreground fill-current" size={size === "lg" ? 28 : size === "md" ? 22 : 18} />
       </div>
       {showText && (
-        <span className={cn(textClasses[size], "font-bold text-foreground")}>
+        <span className={cn(textClasses[size], "font-bold", forceWhite ? "text-white" : "text-foreground")}>
           Ad<span className="text-primary">Rewards</span>
         </span>
       )}

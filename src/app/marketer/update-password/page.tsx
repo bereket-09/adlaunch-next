@@ -65,7 +65,7 @@ export default function MarketerUpdatePasswordPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50/50 flex font-sans overflow-hidden">
+        <div className="min-h-screen bg-white flex font-sans overflow-hidden">
             <div className="flex-1 flex items-center justify-center p-8 sm:p-16 relative z-10">
                 {/* Subtle Geometric Background */}
                 <div className="absolute top-0 left-0 w-full h-full bg-[url('/bg-pattern.svg')] opacity-[0.03] pointer-events-none" />
@@ -76,12 +76,12 @@ export default function MarketerUpdatePasswordPage() {
                             <Logo size="lg" className="mx-auto" />
                         </div>
                         <div className="space-y-2">
-                            <h1 className="text-4xl font-black tracking-tight text-slate-900 italic uppercase">Secure Your Account</h1>
-                            <p className="text-slate-500 font-medium text-lg leading-relaxed">Let's set up a new password to keep your brand assets safe</p>
+                            <h1 className="text-4xl font-black tracking-tight text-slate-900 italic uppercase">Secure Your Access</h1>
+                            <p className="text-slate-500 font-medium text-lg leading-relaxed">Let's set up a new password to keep your campaign data safe</p>
                         </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-8 bg-white p-12 rounded-[3.5rem] shadow-[0_48px_96px_-24px_rgba(0,0,0,0.08)] border border-slate-100/50">
+                    <form onSubmit={handleSubmit} className="space-y-8 bg-slate-50/50 p-12 rounded-[3.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100">
                         <div className="space-y-3">
                             <Label htmlFor="password" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">New Password</Label>
                             <div className="relative group">
@@ -89,10 +89,10 @@ export default function MarketerUpdatePasswordPage() {
                                 <Input
                                     id="password"
                                     type={showPassword ? "text" : "password"}
-                                    placeholder="Min. 8 characters"
+                                    placeholder="Security Key"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="pl-12 pr-12 h-14 rounded-2xl border-slate-100 bg-slate-50/50 focus:ring-4 focus:ring-primary/10 transition-all font-medium placeholder:text-slate-200"
+                                    className="pl-12 pr-12 h-14 rounded-2xl border-slate-100 bg-white focus:ring-4 focus:ring-primary/10 transition-all font-medium placeholder:text-slate-300 shadow-sm"
                                     required
                                 />
                                 <button
@@ -106,7 +106,7 @@ export default function MarketerUpdatePasswordPage() {
                         </div>
 
                         <div className="space-y-3">
-                            <Label htmlFor="confirmPassword" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Confirm Password</Label>
+                            <Label htmlFor="confirmPassword" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Confirm Identity</Label>
                             <div className="relative group">
                                 <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                 <Input
@@ -115,7 +115,7 @@ export default function MarketerUpdatePasswordPage() {
                                     placeholder="Verify password"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="pl-12 pr-12 h-14 rounded-2xl border-slate-100 bg-slate-50/50 focus:ring-4 focus:ring-primary/10 transition-all font-medium placeholder:text-slate-200"
+                                    className="pl-12 pr-12 h-14 rounded-2xl border-slate-100 bg-white focus:ring-4 focus:ring-primary/10 transition-all font-medium placeholder:text-slate-300 shadow-sm"
                                     required
                                 />
                                 <button
@@ -136,54 +136,54 @@ export default function MarketerUpdatePasswordPage() {
                         <Button
                             type="submit"
                             variant="gradient"
-                            className="w-full h-16 rounded-[1.5rem] text-xl font-black tracking-widest uppercase italic shadow-orange-glow active:scale-[0.98] transition-all hover:opacity-95"
+                            className="w-full h-16 rounded-[1.5rem] text-xl font-black tracking-widest uppercase italic shadow-2xl active:scale-[0.98] transition-all hover:opacity-95"
                             disabled={!canSubmit || isLoading}
                             size="lg"
                         >
                             {isLoading ? (
                                 <span className="flex items-center gap-3">
                                     <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    Updating...
+                                    Syncing...
                                 </span>
-                            ) : "Update Password"}
+                            ) : "Secure Account"}
                         </Button>
                     </form>
 
                     <div className="flex flex-col items-center gap-2">
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">AdRewards Security Framework</p>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">AdRewards Security Node</p>
                     </div>
                 </div>
             </div>
 
             {/* Right side - Visual Assurance */}
-            <div className="hidden lg:flex flex-1 bg-[#050505] relative overflow-hidden items-center justify-center p-24">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-600/[0.08] via-primary/[0.04] to-transparent pointer-events-none" />
+            <div className="hidden lg:flex flex-1 bg-slate-50 relative overflow-hidden items-center justify-center p-24">
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,109,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,109,0,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
                 
                 {/* Floating Glow Orbs */}
                 <div className="absolute top-[20%] right-[20%] w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
                 <div className="absolute bottom-[20%] left-[20%] w-[300px] h-[300px] bg-orange-500/5 rounded-full blur-[100px] pointer-events-none" />
 
                 <div className="relative z-10 max-w-lg space-y-12">
-                    <div className="h-20 w-20 bg-white/[0.03] backdrop-blur-3xl rounded-[2.5rem] flex items-center justify-center border border-white/10 shadow-2xl animate-fade-in">
+                    <div className="h-20 w-20 bg-white rounded-[2.5rem] flex items-center justify-center border border-slate-100 shadow-2xl shadow-slate-200/50 animate-fade-in">
                         <Lock className="h-10 w-10 text-orange-500" />
                     </div>
                     <div className="space-y-6">
-                        <h2 className="text-6xl font-black text-white leading-[0.95] tracking-tighter italic uppercase">
-                            Privacy <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-primary">First.</span>
+                        <h2 className="text-6xl font-black text-slate-900 leading-[0.95] tracking-tighter italic uppercase text-slate-900">
+                            Sovereign <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-primary italic">Identity.</span>
                         </h2>
-                        <p className="text-xl text-slate-400 leading-relaxed font-medium">
-                            We use advanced encryption standards to ensure your account credentials and business data remain private and secure.
+                        <p className="text-xl text-slate-500 leading-relaxed font-medium">
+                            Protecting the integrity of the Ethiopian digital advertising ecosystem through advanced security.
                         </p>
                     </div>
-                    <div className="grid grid-cols-2 gap-12 border-t border-white/5 pt-12">
+                    <div className="grid grid-cols-2 gap-12 border-t border-slate-100 pt-12">
                         <div className="space-y-2">
-                            <p className="text-4xl font-black text-white tracking-tighter italic">256-bit</p>
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">End-to-End <br />Security</p>
+                            <p className="text-4xl font-black text-slate-900 tracking-tighter italic">256-bit</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Encrypted <br />Tunneling</p>
                         </div>
                         <div className="space-y-2">
-                            <p className="text-4xl font-black text-white tracking-tighter italic">100%</p>
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Account <br />Sovereignty</p>
+                            <p className="text-4xl font-black text-slate-900 tracking-tighter italic">100%</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Data <br />Confidentiality</p>
                         </div>
                     </div>
                 </div>

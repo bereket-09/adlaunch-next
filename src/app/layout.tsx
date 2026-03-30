@@ -11,6 +11,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "AdRewards - Advertising Platform",
   description: "Next-generation advertising platform",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({

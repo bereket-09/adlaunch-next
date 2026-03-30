@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 import { 
   ArrowRight, 
   Play, 
@@ -32,7 +33,7 @@ export default function IndexPage() {
             <Link href="/marketer/login" className="hidden sm:block">
               <Button variant="ghost" className="text-slate-300 hover:text-white font-black uppercase tracking-widest text-[10px]">Marketer Hub</Button>
             </Link>
-            <Link href="/marketer/login">
+            <Link href="/marketer/login" className="hidden sm:block">
               <Button className="bg-primary text-white hover:bg-orange-600 shadow-orange-glow px-10 h-14 rounded-2xl font-black uppercase tracking-tighter italic scale-100 hover:scale-[1.02] active:scale-[0.98] transition-all">
                 Get Started
               </Button>
@@ -55,7 +56,7 @@ export default function IndexPage() {
               The Digital Ad Network
             </div>
 
-            <h1 className="text-6xl md:text-[7.5rem] font-black tracking-tighter leading-[0.8] uppercase italic text-white animate-fade-in-up [animation-delay:100ms] max-w-4xl mx-auto">
+            <h1 className="text-4xl sm:text-6xl md:text-[7.5rem] font-black tracking-tighter leading-[0.8] uppercase italic text-white animate-fade-in-up [animation-delay:100ms] max-w-4xl mx-auto">
               Real Views. <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-primary to-orange-500 italic">Guaranteed Impact.</span>
             </h1>
@@ -171,16 +172,19 @@ export default function IndexPage() {
         <div className="container mx-auto px-8 text-center max-w-4xl mx-auto space-y-24">
           <h2 className="text-6xl md:text-8xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">Proven <br /><span className="text-primary">Performance.</span></h2>
           
-          <div className="grid sm:grid-cols-3 gap-16">
+          <div className="grid sm:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
-              { val: "92%", label: "Real View Rate" },
-              { val: "78%", label: "Brand Recall" },
-              { val: "100%", label: "Satisfaction" }
+              { val: "92%", label: "Real View Rate", color: "from-primary" },
+              { val: "78%", label: "Brand Recall", color: "from-orange-500" },
+              { val: "100%", label: "Satisfaction", color: "from-slate-900" }
             ].map((stat, i) => (
-              <div key={i} className="space-y-4">
-                <p className="text-6xl md:text-8xl font-black italic tracking-tighter text-slate-900">{stat.val}</p>
-                <div className="h-2 w-20 bg-primary mx-auto rounded-full" />
-                <p className="text-xs font-black uppercase tracking-[0.4em] text-slate-400">{stat.label}</p>
+              <div key={i} className="relative group p-12 bg-slate-950 rounded-[3rem] overflow-hidden">
+                <div className={cn("absolute inset-0 opacity-10 bg-gradient-to-br transition-all duration-500 group-hover:opacity-20", stat.color, "to-transparent")} />
+                <div className="relative z-10 space-y-4">
+                  <p className="text-6xl font-black italic tracking-tighter text-white">{stat.val}</p>
+                  <div className="h-1 w-12 bg-primary rounded-full" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">{stat.label}</p>
+                </div>
               </div>
             ))}
           </div>

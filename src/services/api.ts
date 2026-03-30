@@ -42,7 +42,9 @@ async function fetchAPI<T>(
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         localStorage.removeItem('marketer_id');
-        window.location.href = '/login';
+        const currentPath = window.location.pathname;
+        const loginPath = currentPath.startsWith('/admin') ? '/admin/login' : '/marketer/login';
+        window.location.href = loginPath;
       }
       throw new Error('Session expired. Please login again.');
     }
@@ -56,12 +58,12 @@ async function fetchAPI<T>(
     }
 
     if (!response.ok) {
-        // If it's a server error (5xx) and we have retries left, try again
-        if (response.status >= 500 && retries > 0) {
-            console.warn(`[fetchAPI] Server error (${response.status}). Retrying... (${retries} left)`);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            return fetchAPI(url, options, retries - 1);
-        }
+      // If it's a server error (5xx) and we have retries left, try again
+      if (response.status >= 500 && retries > 0) {
+        console.warn(`[fetchAPI] Server error (${response.status}). Retrying... (${retries} left)`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return fetchAPI(url, options, retries - 1);
+      }
       throw new Error(data?.error || data?.message || 'API request failed');
     }
 
@@ -69,9 +71,9 @@ async function fetchAPI<T>(
   } catch (err: any) {
     // If it's a network error (TypeError: fetch failed) and we have retries left, try again
     if (err.name === 'TypeError' && retries > 0) {
-        console.warn(`[fetchAPI] Network error. Retrying... (${retries} left)`);
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        return fetchAPI(url, options, retries - 1);
+      console.warn(`[fetchAPI] Network error. Retrying... (${retries} left)`);
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      return fetchAPI(url, options, retries - 1);
     }
     throw err;
   }
@@ -85,8 +87,8 @@ async function fetchAPI<T>(
 // Fetch media (video, audio, images, etc.) as Blob
 export async function fetchMedia(url: string, options: RequestInit = {}): Promise<Blob> {
   const response = await fetch(url, {
-      ...options,
-      cache: 'no-store'
+    ...options,
+    cache: 'no-store'
   });
 
   if (!response.ok) {
@@ -237,7 +239,7 @@ export const adAPI = {
     if (data.video_file) {
       formData.append("video", data.video_file, data.video_file.name);
     }
-    
+
     // Append the banner file
     if (data.banner_file) {
       formData.append("banner", data.banner_file, data.banner_file.name);
@@ -261,7 +263,7 @@ export const adAPI = {
       body: JSON.stringify(data),
     }),
 
-    getVideo: (adID: any): Promise<any> =>
+  getVideo: (adID: any): Promise<any> =>
     fetchMedia(API_ENDPOINTS.AD.VIDEO(adID), {
       method: 'GET'
     }),
@@ -352,8 +354,8 @@ export const marketerAPI = {
     formData.append('document', file);
     formData.append('doc_type', docType);
     return fetchAPI(API_ENDPOINTS.MARKETER.KYC(id), {
-        method: 'POST',
-        body: formData
+      method: 'POST',
+      body: formData
     });
   }
 };

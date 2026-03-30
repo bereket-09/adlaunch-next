@@ -4,10 +4,8 @@ const BACKEND_URL = 'https://adplus-backend.onrender.com/api/v1';
 
 // const BACKEND_URL = 'http://localhost:3001/api/v1';
 
-// Bypass SSL certificate issues in development
-if (process.env.NODE_ENV === 'development') {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-}
+// Bypass SSL certificate issues
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 export async function GET(
     request: NextRequest,

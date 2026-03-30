@@ -41,62 +41,52 @@ export default function IndexPage() {
         </div>
       </header>
 
-      {/* Hero Section - Premium Dark */}
+      {/* Hero Section - Minimalist & Centered */}
       <section className="relative min-h-screen flex items-center justify-center pt-32 bg-slate-950 overflow-hidden">
         {/* Background Effects */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-primary/10 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-orange-600/5 rounded-full blur-[150px] translate-y-1/2 -translate-x-1/2" />
-          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.05] bg-[size:60px_60px]" />
+        <div className="absolute inset-0 z-0 text-center">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] bg-primary/10 rounded-full blur-[180px]" />
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03] bg-[size:60px_60px]" />
         </div>
 
-        <div className="container mx-auto max-w-7xl relative z-10 px-8">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <div className="space-y-10 text-left">
-              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-primary text-[10px] font-black uppercase tracking-[0.4em] animate-fade-in">
-                Modern Video Advertising
-              </div>
+        <div className="container mx-auto max-w-5xl relative z-10 px-8 text-center">
+          <div className="space-y-12">
+            <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-primary text-[10px] font-black uppercase tracking-[0.4em] animate-fade-in mx-auto">
+              The Digital Ad Network
+            </div>
 
-              <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] uppercase italic text-white animate-fade-in-up [animation-delay:100ms]">
-                Reach more. <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-primary to-orange-500 italic">Impact Every View.</span>
-              </h1>
+            <h1 className="text-6xl md:text-[7.5rem] font-black tracking-tighter leading-[0.8] uppercase italic text-white animate-fade-in-up [animation-delay:100ms] max-w-4xl mx-auto">
+              Real Views. <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-primary to-orange-500 italic">Guaranteed Impact.</span>
+            </h1>
 
-              <div className="space-y-6 max-w-xl animate-fade-in-up [animation-delay:200ms]">
-                <p className="text-xl md:text-2xl text-slate-400 font-medium leading-relaxed">
-                  Launch video campaigns that people actually watch. Guaranteed engagement with real humans.
-                </p>
-                <div className="flex flex-wrap gap-x-8 gap-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-2 w-2 rounded-full bg-primary" />
-                    <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Verified Viewers</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="h-2 w-2 rounded-full bg-primary" />
-                    <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Zero Bot Traffic</span>
-                  </div>
+            <div className="space-y-8 max-w-2xl mx-auto animate-fade-in-up [animation-delay:200ms]">
+              <p className="text-xl md:text-2xl text-slate-400 font-medium leading-relaxed">
+                Reach millions with video campaigns that are actually watched. Join a community of brands that prioritize results over noise.
+              </p>
+              <div className="flex justify-center flex-wrap gap-8">
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary" />
+                  <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Verified Human Traffic</span>
                 </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-6 animate-fade-in-up [animation-delay:300ms] w-full max-w-lg">
-                <Link href="/marketer/login" className="flex-1">
-                  <Button className="w-full h-16 bg-primary text-white shadow-orange-glow hover:scale-105 transition-all text-xl font-black uppercase tracking-tighter italic rounded-2xl">
-                    Get Started
-                  </Button>
-                </Link>
-                <Link href="#how-it-works" className="flex-1">
-                  <Button variant="outline" className="w-full h-16 text-xl font-black uppercase tracking-tighter italic rounded-2xl border-white/10 bg-white/5 text-white hover:bg-white/10 transition-all">
-                    Learn More
-                  </Button>
-                </Link>
+                <div className="flex items-center gap-3">
+                  <div className="h-2 w-2 rounded-full bg-primary" />
+                  <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Premium Brand Safety</span>
+                </div>
               </div>
             </div>
 
-            <div className="relative group animate-fade-in-right [animation-delay:400ms]">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-orange-600 rounded-[3rem] blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-              <div className="relative bg-slate-900 border border-white/10 rounded-[3rem] overflow-hidden aspect-video shadow-2xl">
-                 <img src="/campaign_dashboard_mockup.png" alt="Dashboard Preview" className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-all duration-700" />
-              </div>
+            <div className="flex flex-col sm:flex-row gap-6 animate-fade-in-up [animation-delay:300ms] w-full max-w-lg mx-auto">
+              <Link href="/marketer/login" className="flex-1">
+                <Button className="w-full h-18 bg-primary text-white shadow-orange-glow hover:scale-105 transition-all text-xl font-black uppercase tracking-tighter italic rounded-2xl">
+                  Launch Now
+                </Button>
+              </Link>
+              <Link href="#features" className="flex-1">
+                <Button variant="outline" className="w-full h-18 text-xl font-black uppercase tracking-tighter italic rounded-2xl border-white/10 bg-white/5 text-white hover:bg-white/10 transition-all">
+                  Features
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -109,194 +99,133 @@ export default function IndexPage() {
         </div>
       </section>
 
-      {/* Trust Section */}
-      <section className="py-12 bg-white border-b border-slate-100">
-        <div className="container mx-auto px-8">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-32 text-center">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Trusted by brands across the nation</p>
-            <div className="flex flex-wrap justify-center gap-16 items-center opacity-30 grayscale saturate-0">
-               <div className="text-3xl font-black tracking-tighter italic text-slate-900">PREMIUM BRANDS</div>
-               <div className="text-3xl font-black tracking-tighter italic text-slate-900 underline decoration-primary decoration-4">LEADING FIRMS</div>
-               <div className="text-3xl font-black tracking-tighter italic text-slate-900">GLOBAL PARTNERS</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How it Works Section */}
+      {/* How it Works - Simple 2-Column Text */}
       <section id="how-it-works" className="py-40 bg-white">
         <div className="container mx-auto px-8">
           <div className="text-center max-w-3xl mx-auto mb-32 space-y-6">
-            <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-slate-900">Watch & <span className="text-primary italic">Grow.</span></h2>
-            <p className="text-slate-500 text-xl font-medium">A simple, effective way to connect with your target audience.</p>
+            <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">Watch & <span className="text-primary italic">Grow.</span></h2>
+            <p className="text-slate-500 text-xl font-medium">A direct bridge from your brand to an engaged audience.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-24 items-center">
-             <div className="space-y-16">
-                {[
-                  {
-                    step: "01",
-                    title: "For Marketers",
-                    desc: "Upload your video message and set your target audience. We ensure your content is seen by real people who are interested in your brand.",
-                    points: ["Target Real People", "Guaranteed Views"]
-                  },
-                  {
-                    step: "02",
-                    title: "For Viewers",
-                    desc: "Our community watches high-quality videos and gets rewarded for their attention. This ensures your message isn't just displayed, but actually watched.",
-                    points: ["High Retention", "High Engagement"]
-                  }
-                ].map((item, i) => (
-                  <div key={i} className="flex gap-10 group">
-                    <div className="text-6xl font-black italic text-slate-100 group-hover:text-primary transition-colors duration-500">{item.step}</div>
-                    <div className="space-y-4">
-                       <h3 className="text-3xl font-black italic uppercase tracking-tight text-slate-900">{item.title}</h3>
-                       <p className="text-slate-500 text-lg leading-relaxed max-w-md">{item.desc}</p>
-                       <div className="flex gap-4">
-                          {item.points.map((p, idx) => (
-                             <span key={idx} className="text-[10px] font-black uppercase tracking-widest bg-slate-100 px-4 py-2 rounded-full text-slate-500">{p}</span>
-                          ))}
-                       </div>
-                    </div>
-                  </div>
-                ))}
-             </div>
-             
-             <div className="relative group">
-                <div className="absolute -inset-4 bg-primary/5 rounded-[4rem] group-hover:bg-primary/10 transition-colors" />
-                <div className="relative bg-white border border-slate-200 rounded-[3rem] overflow-hidden shadow-2xl p-10">
-                   <div className="relative w-full aspect-[9/16] bg-slate-950 rounded-[2.5rem] overflow-hidden shadow-2xl mx-auto max-w-[300px]">
-                      <img src="/viewer_app_mockup.png" alt="App Experience" className="w-full h-full object-cover opacity-90" />
-                   </div>
-                   <div className="text-center mt-10">
-                      <p className="text-sm font-black text-slate-400 uppercase tracking-widest italic">Seamless Engagement</p>
+          <div className="grid md:grid-cols-2 gap-20 max-w-6xl mx-auto">
+            {[
+              {
+                step: "01",
+                title: "Create & Target",
+                desc: "Upload your video message and select who you want to reach. We take care of setting up the proper channels for max visibility.",
+                perks: ["Smart Segmentation", "Easy Uploads"]
+              },
+              {
+                step: "02",
+                title: "View & Engage",
+                desc: "Your content is watched by real people in our network. Engagement is recorded in real-time, providing immediate feedback.",
+                perks: ["Verified Engagement", "Real Results"]
+              }
+            ].map((item, i) => (
+              <div key={i} className="p-12 bg-slate-50 border border-slate-100 rounded-[3rem] space-y-10 group hover:bg-white hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500">
+                <div className="text-6xl font-black italic text-slate-200 group-hover:text-primary transition-colors">{item.step}</div>
+                <div className="space-y-6">
+                   <h3 className="text-4xl font-black italic uppercase tracking-tight text-slate-900">{item.title}</h3>
+                   <p className="text-slate-500 text-xl leading-relaxed">{item.desc}</p>
+                   <div className="flex flex-wrap gap-3 pt-4">
+                      {item.perks.map((p, idx) => (
+                         <span key={idx} className="text-[10px] font-black uppercase tracking-widest bg-slate-100 px-5 py-2 rounded-full text-slate-600 italic group-hover:bg-primary/5 group-hover:text-primary">{p}</span>
+                      ))}
                    </div>
                 </div>
-             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section id="features" className="py-40 bg-slate-950 text-white relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('/grid.svg')] opacity-[0.03] bg-[size:40px_40px]" />
-        
-        <div className="container mx-auto px-8 relative z-10">
-          <div className="space-y-8 max-w-2xl mb-32">
-            <h2 className="text-6xl md:text-8xl font-black italic uppercase tracking-tighter leading-[0.85]">Built for <span className="text-primary italic">Impact.</span></h2>
-            <p className="text-slate-400 text-xl font-medium">Simple tools to manage your campaigns and track your success in real-time.</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { title: "Real Views", desc: "No bots. No fake traffic. Just real humans watching your video content.", icon: Users },
-              { title: "High Engagement", desc: "Users are focused on your message to earn rewards, leading to better brand recall.", icon: Activity },
-              { title: "Live Tracking", desc: "Watch your campaign results climb in real-time with our simple dashboard.", icon: BarChart3 },
-              { title: "Simple Setup", desc: "Launch your first campaign in minutes with our intuitive uploader.", icon: Play },
-              { title: "Secure Portal", desc: "Your data and campaigns are protected with institutional-grade security.", icon: Shield },
-              { title: "Smart Targeting", desc: "Reach the specific groups of people most likely to love your brand.", icon: Sparkles },
-              { title: "Support Always", desc: "Our team is here to help you optimize your creative for the best results.", icon: Mail },
-              { title: "Scale Fast", desc: "Start small and grow your reach as you see the results come in.", icon: ShieldCheck },
-            ].map((f, i) => (
-              <div key={i} className="p-10 bg-white/5 border border-white/10 rounded-[2.5rem] hover:bg-primary transition-all duration-500 group">
-                 <f.icon className="h-10 w-10 text-primary group-hover:text-white mb-8 transition-colors" />
-                 <h3 className="text-2xl font-black italic uppercase tracking-tight mb-4 group-hover:text-white">{f.title}</h3>
-                 <p className="text-slate-500 group-hover:text-white/80 font-medium leading-relaxed text-sm">{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Results Section */}
-      <section id="results" className="py-40 bg-white overflow-hidden relative">
-        <div className="absolute inset-0 bg-primary/3 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-        
+      {/* Simplified Features Grid */}
+      <section id="features" className="py-40 bg-slate-950 text-white relative">
         <div className="container mx-auto px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-32 items-center">
-             <div className="space-y-12">
-                <h2 className="text-6xl font-black italic uppercase tracking-tighter leading-[0.9] text-slate-900">Proven <br /> <span className="text-primary">Performance.</span></h2>
-                <div className="space-y-12">
-                   {[
-                     { label: "View Completion Rate", val: "92%" },
-                     { label: "Average Brand Recall", val: "78%" },
-                     { label: "Happy Marketers", val: "100%" }
-                   ].map((item, i) => (
-                     <div key={i} className="space-y-4">
-                        <div className="flex justify-between items-end">
-                           <p className="text-xs font-black uppercase text-slate-500 tracking-[0.2em]">{item.label}</p>
-                           <p className="text-4xl font-black italic text-slate-900 tracking-tighter">{item.val}</p>
-                        </div>
-                        <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                           <div className="h-full bg-primary rounded-full w-[85%]" />
-                        </div>
-                     </div>
-                   ))}
-                </div>
-             </div>
+          <div className="text-center max-w-3xl mx-auto mb-32 space-y-8">
+            <h2 className="text-6xl md:text-7xl font-black italic uppercase tracking-tighter leading-none">Powerful <br /><span className="text-primary italic">Intelligence.</span></h2>
+            <p className="text-slate-400 text-xl font-medium">Tools built to give you full control over your campaign success.</p>
+          </div>
 
-             <div className="bg-slate-50 border border-slate-100 p-16 rounded-[4rem] shadow-2xl space-y-10">
-                <div className="space-y-4">
-                   <h3 className="text-4xl font-black italic uppercase tracking-tight text-slate-900">Join the Future.</h3>
-                   <p className="text-slate-500 font-medium text-lg">Stop wasting your budget on ignored ads. Start getting watched.</p>
-                </div>
-                <Link href="/marketer/login" className="block">
-                  <Button className="w-full h-20 bg-slate-900 text-white shadow-2xl text-xl font-black uppercase tracking-tighter italic rounded-[2rem] hover:bg-slate-800 transition-all">
-                    Start Your Campaign
-                  </Button>
-                </Link>
-             </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { title: "Real Views", desc: "No bots. Just human focus on your brand.", icon: Users },
+              { title: "Live Insights", desc: "Watch your reach climb second-by-second.", icon: Activity },
+              { title: "Smart Targeting", desc: "Connect with those who seek your service.", icon: Sparkles },
+              { title: "Secure Portal", desc: "Institutional-grade data protection.", icon: Shield },
+              { title: "Fast Setup", desc: "Go live as soon as your video is ready.", icon: Play },
+              { title: "Total Success", desc: "Guaranteed engagement from start to end.", icon: ShieldCheck },
+            ].map((f, i) => (
+              <div key={i} className="p-12 bg-white/5 border border-white/10 rounded-[3rem] hover:bg-white/10 transition-all group">
+                 <f.icon className="h-10 w-10 text-primary mb-8" />
+                 <h3 className="text-2xl font-black italic uppercase tracking-tight mb-4 group-hover:text-primary transition-colors">{f.title}</h3>
+                 <p className="text-slate-500 font-medium leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Final */}
-      <section className="py-60 px-8 text-center bg-white relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
-        <div className="container mx-auto max-w-4xl space-y-12 relative z-10">
-          <h2 className="text-6xl md:text-8xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">
-            Scale Your <br /><span className="text-primary italic">Success.</span>
-          </h2>
-          <p className="text-xl text-slate-500 font-medium italic uppercase tracking-widest text-[10px]">Simple setup. Real results.</p>
-          <Link href="/marketer/login">
-            <Button size="xl" className="h-24 bg-primary text-white shadow-orange-glow text-2xl font-black uppercase tracking-tighter italic px-20 rounded-[2.5rem] transition-all hover:scale-105 active:scale-95">
-              Contact Sales
-              <ArrowRight className="h-8 w-8 ml-4" />
-            </Button>
-          </Link>
+      {/* Simplified Results */}
+      <section id="results" className="py-40 bg-white">
+        <div className="container mx-auto px-8 text-center max-w-4xl mx-auto space-y-24">
+          <h2 className="text-6xl md:text-8xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">Proven <br /><span className="text-primary">Performance.</span></h2>
+          
+          <div className="grid sm:grid-cols-3 gap-16">
+            {[
+              { val: "92%", label: "Real View Rate" },
+              { val: "78%", label: "Brand Recall" },
+              { val: "100%", label: "Satisfaction" }
+            ].map((stat, i) => (
+              <div key={i} className="space-y-4">
+                <p className="text-6xl md:text-8xl font-black italic tracking-tighter text-slate-900">{stat.val}</p>
+                <div className="h-2 w-20 bg-primary mx-auto rounded-full" />
+                <p className="text-xs font-black uppercase tracking-[0.4em] text-slate-400">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="pt-20">
+            <Link href="/marketer/login">
+              <Button size="xl" className="h-24 bg-slate-900 text-white shadow-2xl text-2xl font-black uppercase tracking-tighter italic px-20 rounded-[2.5rem] transition-all hover:scale-105 active:scale-95">
+                Join the Network
+                <ArrowRight className="h-8 w-8 ml-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="pt-32 pb-20 px-8 bg-white border-t border-slate-100">
+      {/* Footer - Final Clean Structure */}
+      <footer className="pt-32 pb-20 px-8 bg-slate-50 border-t border-slate-200">
         <div className="container mx-auto max-w-7xl">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-24 mb-32">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-32 mb-32">
              <div className="space-y-10">
                 <Logo size="md" />
-                <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-xs">Building the most engaged bridge between brands and audiences in the modern market.</p>
+                <p className="text-slate-500 text-sm font-medium leading-relaxed max-w-xs uppercase italic tracking-widest">Connecting Premium Brands with the Heart of the Audience.</p>
              </div>
              
-             <div className="space-y-8">
-                <p className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em]">Navigation</p>
-                <ul className="space-y-4 text-xs font-bold text-slate-400 uppercase tracking-widest">
-                   <li><Link href="#features" className="hover:text-primary transition-colors">Features</Link></li>
-                   <li><Link href="#how-it-works" className="hover:text-primary transition-colors">How it Works</Link></li>
-                   <li><Link href="/privacy" className="hover:text-primary transition-colors">Privacy</Link></li>
-                   <li><Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
-                </ul>
-             </div>
-             
-             <div className="space-y-8">
-                <p className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em]">Connect</p>
-                <p className="text-xs font-bold text-slate-400 leading-relaxed uppercase tracking-widest">
-                   AdRewards Group <br />
-                   support@adrewards.app
-                </p>
+             <div className="grid grid-cols-2 gap-12">
+               <div className="space-y-10">
+                  <p className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em]">Company</p>
+                  <ul className="space-y-4 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                     <li><Link href="#features" className="hover:text-primary">Features</Link></li>
+                     <li><Link href="/privacy" className="hover:text-primary">Privacy</Link></li>
+                     <li><Link href="/terms" className="hover:text-primary">Terms</Link></li>
+                  </ul>
+               </div>
+               <div className="space-y-10">
+                  <p className="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em]">Connect</p>
+                  <p className="text-xs font-bold text-slate-400 leading-relaxed uppercase tracking-widest italic">
+                     Addis Ababa <br />
+                     support@adrewards.app
+                  </p>
+               </div>
              </div>
           </div>
           
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12 border-t border-slate-50 pt-12">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">© 2026 AdRewards Ethiopia. Every view counts.</p>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12 border-t border-slate-200 pt-12">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">© 2026 AdRewards Group. All rights reserved.</p>
             <div className="flex gap-12 text-[10px] font-black text-slate-900 uppercase tracking-[0.3em] italic">
                <span>Simple</span>
                <span>Direct</span>

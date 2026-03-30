@@ -24,8 +24,8 @@ import { API_ENDPOINTS } from "@/config/api";
 
 export default function AdminSettingsPage() {
     const [platformSettings, setPlatformSettings] = useState({
-        platformName: "AdLaunch Admin",
-        supportEmail: "support@adlaunch.et",
+        platformName: "AdRewards Admin",
+        supportEmail: "support@adrewards.et",
         maintenanceMode: false,
         debugMode: false,
     });

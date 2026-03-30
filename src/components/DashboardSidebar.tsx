@@ -138,7 +138,7 @@ const DashboardSidebar = ({ items, isOpen, onClose, userType }: DashboardSidebar
               A
             </div>
             <div>
-              <p className="text-sm font-black text-foreground tracking-tight leading-none">ADLaunch</p>
+              <p className="text-sm font-black text-foreground tracking-tight leading-none">AdRewards</p>
               <p className="text-[9px] font-semibold text-primary uppercase tracking-widest leading-none mt-0.5">
                 {userType === "admin" ? "Admin Console" : "Marketer Hub"}
               </p>
@@ -181,7 +181,7 @@ const DashboardSidebar = ({ items, isOpen, onClose, userType }: DashboardSidebar
                 className="w-full h-7 rounded-lg text-[10px] font-bold uppercase tracking-wider border-primary/30 text-primary hover:bg-primary hover:text-white transition-all duration-200"
                 asChild
               >
-                <a href="mailto:support@adlaunch.com">Contact Desk</a>
+                <a href="mailto:support@adrewards.com">Contact Desk</a>
               </Button>
             </div>
           </div>

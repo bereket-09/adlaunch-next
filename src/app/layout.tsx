@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AdLaunch - Advertising Platform",
+  title: "AdRewards - Advertising Platform",
   description: "Next-generation advertising platform",
 };
 

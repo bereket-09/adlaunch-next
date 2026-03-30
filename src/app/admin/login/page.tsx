@@ -79,50 +79,50 @@ export default function AdminLoginPage() {
             <div className="flex-1 flex items-center justify-center p-6 sm:p-12 relative z-10">
                 <div className="w-full max-w-[420px] space-y-10">
                     <div className="text-center space-y-4">
-                        <div className="inline-flex items-center justify-center p-4 bg-primary/10 rounded-3xl border border-primary/20 shadow-2xl shadow-primary/20 animate-pulse">
+                        <div className="inline-flex items-center justify-center p-4 bg-white/[0.03] backdrop-blur-md rounded-3xl border border-white/10 shadow-2xl animate-fade-in">
                             <Shield className="h-10 w-10 text-primary" />
                         </div>
                         <div className="space-y-2">
-                            <h1 className="text-4xl font-black tracking-tight text-white uppercase italic">Command Center</h1>
-                            <p className="text-slate-400 text-sm font-medium">Restricted access for platform administrators only</p>
+                            <h1 className="text-4xl font-black tracking-tight text-white uppercase italic">Admin Portal</h1>
+                            <p className="text-slate-400 text-sm font-medium">Please sign in to manage the platform</p>
                         </div>
                     </div>
 
-                    <div className="bg-white/5 backdrop-blur-2xl border border-white/10 p-8 rounded-[2.5rem] shadow-2xl shadow-black">
+                    <div className="bg-white/[0.02] backdrop-blur-3xl border border-white/5 p-10 rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]">
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-2">
-                                <Label htmlFor="email" className="text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">Admin Identity</Label>
+                                <Label htmlFor="email" className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] pl-1">Email Address</Label>
                                 <div className="relative group">
-                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
                                     <Input
                                         id="email"
                                         type="email"
-                                        placeholder="admin@adlaunch.ai"
+                                        placeholder="admin@adrewards.et"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="bg-slate-900/50 border-slate-800 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all"
+                                        className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all placeholder:text-slate-700"
                                         required
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="password" title="Standard Admin Password" className="text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">Secure Passkey</Label>
+                                <Label htmlFor="password" title="Your Security Passkey" className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] pl-1">Password</Label>
                                 <div className="relative group">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
                                     <Input
                                         id="password"
                                         type={showPassword ? "text" : "password"}
                                         placeholder="••••••••"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="bg-slate-900/50 border-slate-800 text-white pl-12 pr-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all"
+                                        className="bg-black/40 border-white/5 text-white pl-12 pr-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all placeholder:text-slate-700"
                                         required
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white transition-colors"
                                     >
                                         {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                     </button>
@@ -132,16 +132,17 @@ export default function AdminLoginPage() {
                             <Button
                                 type="submit"
                                 variant="gradient"
-                                className="w-full h-14 rounded-2xl text-lg font-black tracking-widest uppercase italic shadow-orange-glow active:scale-[0.98] transition-all"
+                                className="w-full h-14 rounded-2xl text-lg font-black tracking-widest uppercase italic shadow-orange-glow active:scale-[0.98] transition-all hover:opacity-90"
                                 disabled={isLoading}
+                                size="lg"
                             >
                                 {isLoading ? (
                                     <span className="flex items-center gap-3">
                                         <div className="h-5 w-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                                        Bypassing...
+                                        Checking...
                                     </span>
                                 ) : (
-                                    "Initiate Access"
+                                    "Sign In"
                                 )}
                             </Button>
                         </form>
@@ -150,32 +151,33 @@ export default function AdminLoginPage() {
                     <div className="flex flex-col items-center gap-6">
                         <Link
                             href="/marketer/login"
-                            className="text-xs font-bold text-slate-500 hover:text-primary uppercase tracking-widest transition-all"
+                            className="text-xs font-bold text-slate-500 hover:text-primary uppercase tracking-[0.2em] transition-all"
                         >
-                            ← Switch to Marketer Portal
+                            ← Switch to Marketer Hub
                         </Link>
-                        <Logo size="sm" className="opacity-50 grayscale hover:grayscale-0 transition-all" />
+                        <Logo size="sm" className="opacity-30 grayscale hover:grayscale-0 transition-all" />
                     </div>
                 </div>
             </div>
 
-            <div className="hidden xl:flex flex-1 items-center justify-center p-20 bg-[url('/grid.svg')] bg-center bg-no-repeat bg-contain">
+            <div className="hidden xl:flex flex-1 items-center justify-center p-20 bg-[url('/grid.svg')] bg-center bg-no-repeat bg-contain relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-orange-600/5" />
                 <div className="relative">
-                    <div className="absolute inset-0 bg-primary/20 rounded-full blur-[100px] animate-pulse" />
-                    <div className="relative border border-white/10 bg-slate-900/50 backdrop-blur-3xl p-12 rounded-[3.5rem] max-w-lg space-y-6">
-                        <div className="h-2 w-24 bg-gradient-to-r from-primary to-orange-600 rounded-full" />
-                        <h2 className="text-4xl font-black text-white leading-tight">Platform Governance & Global Oversight</h2>
-                        <p className="text-slate-400 text-lg leading-relaxed">
-                            Real-time monitoring of marketer activity, budget distribution, and MSISDN interactions across the entire network.
+                    <div className="absolute inset-0 bg-primary/20 rounded-full blur-[120px] animate-pulse" />
+                    <div className="relative border border-white/10 bg-black/40 backdrop-blur-3xl p-16 rounded-[4rem] max-w-xl space-y-8 shadow-2xl">
+                        <div className="h-1.5 w-24 bg-gradient-to-r from-primary to-orange-600 rounded-full" />
+                        <h2 className="text-5xl font-black text-white leading-[1.1] tracking-tight">Manage with <span className="text-primary italic">Confidence</span></h2>
+                        <p className="text-slate-400 text-xl font-medium leading-relaxed">
+                            A comprehensive dashboard for oversight and strategic management of the network.
                         </p>
-                        <div className="grid grid-cols-2 gap-8 pt-6">
-                            <div className="space-y-1">
-                                <p className="text-2xl font-black text-white">99.9%</p>
-                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">System Uptime</p>
+                        <div className="grid grid-cols-2 gap-12 pt-8">
+                            <div className="space-y-2">
+                                <p className="text-3xl font-black text-white">99.9%</p>
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">System Reliability</p>
                             </div>
-                            <div className="space-y-1">
-                                <p className="text-2xl font-black text-white">10M+</p>
-                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Active MSISDNs</p>
+                            <div className="space-y-2">
+                                <p className="text-3xl font-black text-white">10M+</p>
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Live Interactions</p>
                             </div>
                         </div>
                     </div>

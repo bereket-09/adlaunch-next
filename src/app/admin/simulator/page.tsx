@@ -230,7 +230,7 @@ export default function SimulatorPage() {
                                                                 <span className="text-[10px] text-zinc-500 font-bold uppercase italic">JUST_NOW</span>
                                                             </div>
                                                             <p className="text-[15px] leading-relaxed mb-6 font-bold text-zinc-200 tracking-tight">
-                                                                Click the link below to view the exclusive offer from AdLaunch. Enjoy your reward!
+                                                                Click the link below to view the exclusive offer from AdRewards. Enjoy your reward!
                                                             </p>
 
                                                             <div className="bg-black/50 p-5 rounded-2xl border border-white/5 group-hover:border-primary/40 transition-all duration-300">

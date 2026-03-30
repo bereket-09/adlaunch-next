@@ -56,7 +56,7 @@ export default function MarketerRegisterPage() {
             setIsSubmitted(true);
             toast({
                 title: "Application Submitted",
-                description: "Your KYC details are under review.",
+                description: "Your account details are under review.",
             });
         } catch (err) {
             toast({
@@ -71,28 +71,32 @@ export default function MarketerRegisterPage() {
 
     if (isSubmitted) {
         return (
-            <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+            <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center p-8 text-center overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
 
-                <div className="relative z-10 space-y-8 max-w-md">
-                    <Logo size="lg" className="mx-auto" />
-
-                    <div className="inline-flex items-center justify-center p-6 bg-emerald-500/10 rounded-full border border-emerald-500/20 shadow-2xl shadow-emerald-500/20">
-                        <CheckCircle2 className="h-12 w-12 text-emerald-500" />
+                <div className="relative z-10 space-y-12 max-w-xl w-full">
+                    <div className="animate-fade-in-up">
+                        <Logo size="lg" className="mx-auto" />
                     </div>
 
-                    <div className="space-y-4">
-                        <h1 className="text-3xl font-black text-white uppercase italic">Application Pending</h1>
-                        <p className="text-slate-400 leading-relaxed font-medium">
-                            Thank you for applying to become a brand partner. Our compliance team is currently reviewing your KYC documentation.
-                        </p>
-                        <p className="text-slate-500 text-sm">
-                            Estimated review time: <span className="text-white font-bold">24-48 hours</span>
-                        </p>
+                    <div className="inline-flex items-center justify-center p-8 bg-emerald-500/10 rounded-[2.5rem] border border-emerald-500/20 shadow-2xl shadow-emerald-500/20 animate-fade-in">
+                        <CheckCircle2 className="h-14 w-14 text-emerald-500" />
                     </div>
 
-                    <Button asChild variant="outline" className="w-full border-white/10 text-white hover:bg-white/5 h-12 rounded-2xl font-bold">
-                        <Link href="/marketer/login">Return to Login</Link>
+                    <div className="space-y-6">
+                        <h1 className="text-5xl font-black text-white italic uppercase tracking-tight">Application Received</h1>
+                        <p className="text-slate-400 text-xl font-medium leading-relaxed max-w-md mx-auto">
+                            Thank you for your interest in joining our network. Our team is currently reviewing your account details.
+                        </p>
+                        <div className="pt-4">
+                            <p className="text-slate-500 text-sm font-bold uppercase tracking-[0.2em]">
+                                Expected review within <span className="text-white">24-48 hours</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <Button asChild variant="outline" className="w-full max-w-xs mx-auto border-white/5 bg-white/[0.02] text-white hover:bg-white/5 h-14 rounded-2xl font-black uppercase tracking-widest transition-all">
+                        <Link href="/marketer/login">Return to Hub</Link>
                     </Button>
                 </div>
             </div>
@@ -100,50 +104,52 @@ export default function MarketerRegisterPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-950 flex font-sans">
-            <div className="flex-1 flex items-center justify-center p-6 sm:p-12 relative overflow-y-auto">
-                {/* Background Decorative Elements */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-600/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
+        <div className="min-h-screen bg-[#050505] flex font-sans overflow-x-hidden">
+            <div className="flex-1 flex items-center justify-center p-8 sm:p-16 relative overflow-y-auto">
+                {/* Modern Ambient Background */}
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-orange-600/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
-                <div className="w-full max-w-[600px] space-y-10 relative z-10 py-12">
-                    <div className="text-center space-y-4">
-                        <Logo size="lg" className="mx-auto" />
-                        <div className="space-y-1">
-                            <h1 className="text-3xl font-black tracking-tight text-white uppercase italic">Partner Onboarding</h1>
-                            <p className="text-slate-400 font-medium">Complete your KYC to access the AdLaunch Engine</p>
+                <div className="w-full max-w-[650px] space-y-12 relative z-10 py-16">
+                    <div className="text-center space-y-6">
+                        <div className="animate-fade-in-up">
+                            <Logo size="lg" className="mx-auto" />
+                        </div>
+                        <div className="space-y-2">
+                            <h1 className="text-4xl font-black tracking-tight text-white italic uppercase">Partner Enrollment</h1>
+                            <p className="text-slate-400 font-medium text-lg">Enter your details to join the AdRewards advertising network</p>
                         </div>
                     </div>
 
-                    <div className="bg-white/5 backdrop-blur-2xl border border-white/10 p-8 rounded-[2.5rem] shadow-2xl">
-                        <form onSubmit={handleSubmit} className="space-y-8">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-white/[0.02] backdrop-blur-3xl border border-white/5 p-10 rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]">
+                        <form onSubmit={handleSubmit} className="space-y-10">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-2">
-                                    <Label htmlFor="name" className="text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">Full Name</Label>
+                                    <Label htmlFor="name" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Full Name</Label>
                                     <div className="relative group">
-                                        <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+                                        <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
                                         <Input
                                             id="name"
-                                            placeholder="John Doe"
+                                            placeholder="Your Name"
                                             value={formData.name}
                                             onChange={handleChange}
-                                            className="bg-slate-900 border-slate-800 text-white pl-12 h-12 rounded-xl focus:ring-4 focus:ring-primary/10 transition-all font-medium"
+                                            className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
                                             required
                                         />
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="email" className="text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">Work Email</Label>
+                                    <Label htmlFor="email" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Business Email</Label>
                                     <div className="relative group">
-                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
                                         <Input
                                             id="email"
                                             type="email"
-                                            placeholder="john@company.com"
+                                            placeholder="email@company.com"
                                             value={formData.email}
                                             onChange={handleChange}
-                                            className="bg-slate-900 border-slate-800 text-white pl-12 h-12 rounded-xl focus:ring-4 focus:ring-primary/10 transition-all font-medium"
+                                            className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
                                             required
                                         />
                                     </div>
@@ -151,47 +157,47 @@ export default function MarketerRegisterPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="password" title="Standard AdLaunch Password" className="text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">Account Passkey</Label>
+                                <Label htmlFor="password" title="Your Account Password" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Choose Password</Label>
                                 <div className="relative group">
-                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
                                     <Input
                                         id="password"
                                         type="password"
                                         placeholder="••••••••"
                                         value={formData.password}
                                         onChange={handleChange}
-                                        className="bg-slate-900 border-slate-800 text-white pl-12 h-12 rounded-xl focus:ring-4 focus:ring-primary/10 transition-all font-medium"
+                                        className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
                                         required
                                     />
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-2">
-                                    <Label htmlFor="company_name" className="text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">Company Name</Label>
+                                    <Label htmlFor="company_name" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Company Name</Label>
                                     <div className="relative group">
-                                        <Building className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+                                        <Building className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
                                         <Input
                                             id="company_name"
-                                            placeholder="Company Ltd."
+                                            placeholder="Your Organization"
                                             value={formData.company_name}
                                             onChange={handleChange}
-                                            className="bg-slate-900 border-slate-800 text-white pl-12 h-12 rounded-xl focus:ring-4 focus:ring-primary/10 transition-all font-medium"
+                                            className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
                                             required
                                         />
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="business_reg_number" className="text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">Registration #</Label>
+                                    <Label htmlFor="business_reg_number" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Business License ID</Label>
                                     <div className="relative group">
-                                        <FileText className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+                                        <FileText className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
                                         <Input
                                             id="business_reg_number"
-                                            placeholder="REG-123456"
+                                            placeholder="ID-123456"
                                             value={formData.business_reg_number}
                                             onChange={handleChange}
-                                            className="bg-slate-900 border-slate-800 text-white pl-12 h-12 rounded-xl focus:ring-4 focus:ring-primary/10 transition-all font-medium"
+                                            className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
                                             required
                                         />
                                     </div>
@@ -199,30 +205,30 @@ export default function MarketerRegisterPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="business_address" className="text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">Headquarters Address</Label>
+                                <Label htmlFor="business_address" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Company Address</Label>
                                 <div className="relative group">
-                                    <MapPin className="absolute left-4 top-4 h-5 w-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+                                    <MapPin className="absolute left-4 top-4 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
                                     <Textarea
                                         id="business_address"
-                                        placeholder="Enter full business address..."
+                                        placeholder="Full business address..."
                                         value={formData.business_address}
                                         onChange={handleChange}
-                                        className="bg-slate-900 border-slate-800 text-white pl-12 min-h-[100px] rounded-xl focus:ring-4 focus:ring-primary/10 transition-all font-medium py-3"
+                                        className="bg-black/40 border-white/5 text-white pl-12 min-h-[120px] rounded-[1.5rem] focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium py-4 placeholder:text-slate-800 resize-none"
                                         required
                                     />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="contact_info" className="text-xs font-bold text-slate-300 uppercase tracking-widest pl-1">Phone / Secondary Contact</Label>
+                                <Label htmlFor="contact_info" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] pl-1">Primary Contact Number</Label>
                                 <div className="relative group">
-                                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500 group-focus-within:text-primary transition-colors" />
+                                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600 group-focus-within:text-primary transition-colors" />
                                     <Input
                                         id="contact_info"
-                                        placeholder="+251 900 000 000"
+                                        placeholder="+251 ..."
                                         value={formData.contact_info}
                                         onChange={handleChange}
-                                        className="bg-slate-900 border-slate-800 text-white pl-12 h-12 rounded-xl focus:ring-4 focus:ring-primary/10 transition-all font-medium"
+                                        className="bg-black/40 border-white/5 text-white pl-12 h-14 rounded-2xl focus:ring-4 focus:ring-primary/20 focus:border-primary/50 transition-all font-medium placeholder:text-slate-800"
                                         required
                                     />
                                 </div>
@@ -231,10 +237,11 @@ export default function MarketerRegisterPage() {
                             <Button
                                 type="submit"
                                 variant="gradient"
-                                className="w-full h-14 rounded-2xl text-lg font-black tracking-widest uppercase italic shadow-lg shadow-primary/20 active:scale-[0.98] transition-all"
+                                className="w-full h-16 rounded-[1.5rem] text-xl font-black tracking-widest uppercase italic shadow-orange-glow active:scale-[0.98] transition-all hover:opacity-95"
                                 disabled={isLoading}
+                                size="lg"
                             >
-                                {isLoading ? "Submitting Application..." : "Submit for Review"}
+                                {isLoading ? "Processing..." : "Submit Application"}
                             </Button>
                         </form>
                     </div>
@@ -242,9 +249,9 @@ export default function MarketerRegisterPage() {
                     <div className="text-center">
                         <Link
                             href="/marketer/login"
-                            className="text-xs font-bold text-slate-500 hover:text-primary uppercase tracking-widest transition-all"
+                            className="text-xs font-black text-slate-500 hover:text-primary uppercase tracking-[0.3em] transition-all"
                         >
-                            ← Back to Login
+                            ← Back to hub
                         </Link>
                     </div>
                 </div>

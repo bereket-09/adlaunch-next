@@ -46,12 +46,12 @@ export default function MarketerStatusView({ status }: MarketerStatusViewProps) 
                             {isRejected ? "Action Required: Rejected" : "Review in Progress"}
                         </Badge>
                         <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-900 italic uppercase">
-                            {isRejected ? "Profile Verification Failed" : "Awaiting Authorization"}
+                            {isRejected ? "Account Review Failed" : "Account Under Review"}
                         </h1>
                         <p className="text-slate-500 font-medium text-lg max-w-md mx-auto">
                             {isRejected 
-                                ? "Our compliance team identified inconsistencies in your submission. Please review and update your credentials." 
-                                : "Your agency's credentials have been safely received and are currently undergoing institutional vetting."
+                                ? "There were some issues with your application. Please check your documents and update them." 
+                                : "We have received your business details and are currently reviewing your account. This usually takes 24-48 hours."
                             }
                         </p>
                     </div>
@@ -64,8 +64,8 @@ export default function MarketerStatusView({ status }: MarketerStatusViewProps) 
                                 <FileText className="h-6 w-6 text-primary" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-black uppercase italic tracking-tighter">Identity & KYC</h3>
-                                <p className="text-slate-400 text-xs mt-1 font-medium leading-relaxed">Update your TIN certificate, business license, or contact info to expedite review.</p>
+                                <h3 className="text-lg font-black uppercase italic tracking-tighter">Business Documents</h3>
+                                <p className="text-slate-400 text-xs mt-1 font-medium leading-relaxed">Update your business license or TIN if requested by our team.</p>
                             </div>
                             <Button asChild className="w-full bg-white text-slate-900 hover:bg-slate-100 h-12 rounded-xl font-black uppercase tracking-widest text-[10px] italic">
                                 <Link href="/marketer/kyc">

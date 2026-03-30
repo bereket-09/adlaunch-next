@@ -171,8 +171,8 @@ export default function MarketerRegisterPage() {
                             <Logo size="lg" className="mx-auto" />
                         </div>
                         <div className="space-y-2">
-                            <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-slate-900 italic uppercase leading-none">Institutional Onboarding</h1>
-                            <p className="text-slate-500 font-medium text-xl uppercase tracking-widest text-[10px]">Enroll your agency in Ethiopia's Premium Ad Network</p>
+                            <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-slate-900 italic uppercase leading-none">Partner Registration</h1>
+                            <p className="text-slate-500 font-medium text-xl uppercase tracking-widest text-[10px]">Sign up your business for the AdRewards Network</p>
                         </div>
                     </div>
 
@@ -185,11 +185,11 @@ export default function MarketerRegisterPage() {
                                     <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
                                         <Building2 className="h-4 w-4" />
                                     </div>
-                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 italic">Business Identity</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 italic">Business Profile</h3>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="space-y-2">
-                                        <Label htmlFor="company_name" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Legal Entity Name</Label>
+                                        <Label htmlFor="company_name" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Company Name</Label>
                                         <div className="relative group">
                                             <Building className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                             <Input
@@ -203,7 +203,7 @@ export default function MarketerRegisterPage() {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="business_category" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Industry Vertical</Label>
+                                        <Label htmlFor="business_category" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Business Category</Label>
                                         <Select onValueChange={(v) => setFormData(p => ({...p, business_category: v}))}>
                                             <SelectTrigger className="h-14 rounded-2xl bg-slate-50/50 border-slate-100 font-bold">
                                                 <SelectValue placeholder="Select Category" />
@@ -219,7 +219,7 @@ export default function MarketerRegisterPage() {
                                         </Select>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="business_reg_number" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">TIN / Business License ID</Label>
+                                        <Label htmlFor="business_reg_number" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Business ID (TIN/License)</Label>
                                         <div className="relative group">
                                             <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                             <Input
@@ -233,7 +233,7 @@ export default function MarketerRegisterPage() {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="contact_info" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Corporate Phone</Label>
+                                        <Label htmlFor="contact_info" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Work Phone</Label>
                                         <div className="relative group">
                                             <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                             <Input
@@ -249,17 +249,17 @@ export default function MarketerRegisterPage() {
                                 </div>
                             </div>
 
-                            {/* Section 2: Institutional Credentials */}
+                            {/* Section 2: Account Credentials */}
                             <div className="space-y-8">
                                 <div className="flex items-center gap-3">
                                     <div className="h-8 w-8 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-600 border border-orange-500/20">
                                         <Lock className="h-4 w-4" />
                                     </div>
-                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 italic">Access Credentials</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 italic">Login Details</h3>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="space-y-2">
-                                        <Label htmlFor="name" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Primary Admin Name</Label>
+                                        <Label htmlFor="name" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Full Name</Label>
                                         <div className="relative group">
                                             <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                             <Input
@@ -273,7 +273,7 @@ export default function MarketerRegisterPage() {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="email" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Corporate Login Email</Label>
+                                        <Label htmlFor="email" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Email Address</Label>
                                         <div className="relative group">
                                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                             <Input
@@ -288,7 +288,7 @@ export default function MarketerRegisterPage() {
                                         </div>
                                     </div>
                                     <div className="md:col-span-2 space-y-2">
-                                        <Label htmlFor="password" title="Your Account Password" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Define Portal Password</Label>
+                                        <Label htmlFor="password" title="Your Account Password" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] pl-1">Password</Label>
                                         <div className="relative group">
                                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                             <Input
@@ -305,13 +305,13 @@ export default function MarketerRegisterPage() {
                                 </div>
                             </div>
 
-                            {/* Section 3: Compliance Documents (KYC) */}
+                            {/* Section 3: Business Documents */}
                             <div className="space-y-8">
                                 <div className="flex items-center gap-3">
                                     <div className="h-8 w-8 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600 border border-blue-500/20">
                                         <FileText className="h-4 w-4" />
                                     </div>
-                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 italic">Institutional Proof (KYC)</h3>
+                                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 italic">Verify Business</h3>
                                 </div>
                                 
                                 <div className={cn(
@@ -332,11 +332,11 @@ export default function MarketerRegisterPage() {
                                             <CloudUpload className="h-8 w-8 text-primary" />
                                         </div>
                                         <div className="space-y-2">
-                                            <p className="font-black text-slate-900 uppercase italic tracking-tighter text-xl">Upload KYC Documents</p>
-                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">TIN Certificate, Business License, or Articles of Association</p>
+                                            <p className="font-black text-slate-900 uppercase italic tracking-tighter text-xl">Upload Business Proof</p>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">TIN Certificate, Business License, or ID</p>
                                         </div>
                                         <Button type="button" variant="outline" className="rounded-full border-slate-200 h-11 px-8 font-black uppercase tracking-widest text-[10px] hover:bg-slate-900 hover:text-white transition-all shadow-sm" asChild>
-                                            <label htmlFor="doc-upload" className="cursor-pointer">Attachment Desk</label>
+                                            <label htmlFor="doc-upload" className="cursor-pointer">Select Files</label>
                                         </Button>
                                     </div>
                                 </div>

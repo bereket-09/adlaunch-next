@@ -38,7 +38,28 @@ export default function MaintenanceGuard({ children }: { children: React.ReactNo
         checkMaintenance();
     }, []);
 
-    if (isLoading) return null; // Or a simple loader
+    if (isLoading) return (
+        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 animate-in fade-in duration-500">
+            <div className="relative">
+                {/* Subtle Ambient Glow */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+                
+                <div className="relative z-10 flex flex-col items-center gap-8">
+                    <div className="animate-pulse">
+                        <Logo size="lg" />
+                    </div>
+                    <div className="flex flex-col items-center gap-3">
+                        <div className="flex gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-bounce [animation-delay:-0.3s]" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary/60 animate-bounce [animation-delay:-0.15s]" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" />
+                        </div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.5em] pl-2">Initializing Hub</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     if (isMaintenance) {
         return (

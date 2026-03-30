@@ -65,18 +65,16 @@ export default function MarketerLoginPage() {
 
             if (marketerStatus === "pendingPassChange") {
                 router.push("/marketer/update-password");
-            } else if (marketerStatus === "active") {
+            } else {
+                // For active, pending, or rejected - we allow entry. 
+                // The MarketerLayout will handle restricting features for non-active users.
                 toast({
-                    title: `Welcome back, ${data.marketer.name}!`,
-                    description: "Your dashboard is ready.",
+                    title: `Session Established`,
+                    description: marketerStatus === 'active' 
+                        ? `Welcome back, ${data.marketer.name}!` 
+                        : "Redirecting to your application status hub.",
                 });
                 router.push("/marketer/dashboard");
-            } else {
-                toast({
-                    title: "Access Restricted",
-                    description: `Your account is ${marketerStatus}. Contact support.`,
-                    variant: "destructive",
-                });
             }
         } catch (err) {
             toast({

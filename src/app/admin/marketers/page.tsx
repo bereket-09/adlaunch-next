@@ -22,8 +22,10 @@ import {
     ChevronRight,
     SearchCode,
     Globe,
-    ExternalLink
+    ExternalLink,
+    Activity
 } from "lucide-react";
+import Link from "next/link";
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -294,6 +296,43 @@ export default function AdminMarketersPage() {
                     <KPICard title="Avg. Balance" value={`${(totalPortfolioBudget / (marketers.length || 1)).toLocaleString(undefined, { maximumFractionDigits: 0 })} Br.`} icon={TrendingUp} trend="neutral" />
                 </div>
 
+                {/* Pending Activations Highlights */}
+                {marketers.filter(m => m.status === 'pending').length > 0 && (
+                    <div className="space-y-4">
+                        <h2 className="text-xs font-black uppercase text-primary tracking-[0.4em] flex items-center gap-2">
+                             <Activity className="h-4 w-4 animate-pulse" /> Pending Review
+                        </h2>
+                        <div className="grid md:grid-cols-3 gap-6">
+                            {marketers.filter(m => m.status === 'pending').slice(0, 3).map((m) => (
+                                <Card key={m._id} className="rounded-[2.5rem] border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all border-dashed group">
+                                    <CardHeader className="p-8">
+                                        <div className="flex items-start justify-between">
+                                            <div className="space-y-4">
+                                                <div className="p-3 bg-white rounded-2xl w-fit shadow-sm">
+                                                    <Building2 className="h-6 w-6 text-primary" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-xl font-black italic uppercase tracking-tight text-slate-900 group-hover:text-primary transition-colors">{m.name}</h3>
+                                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">{m.company_name || "New Enrollment"}</p>
+                                                </div>
+                                            </div>
+                                            <Badge className="bg-primary text-white border-none font-black text-[9px] px-3 py-1 italic uppercase animate-pulse">New</Badge>
+                                        </div>
+                                    </CardHeader>
+                                    <div className="px-8 pb-8">
+                                        <Button asChild className="w-full h-12 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black uppercase tracking-widest text-[10px] italic shadow-xl">
+                                            <Link href={`/admin/marketers/${m._id}`}>
+                                                Review Profile
+                                                <ArrowUpRight className="h-4 w-4 ml-2" />
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </Card>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 {/* Control Bar */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-background/50 backdrop-blur-sm p-4 rounded-2xl border border-border/50 shadow-sm">
                     <div className="relative w-full sm:w-80">
@@ -305,7 +344,7 @@ export default function AdminMarketersPage() {
                             className="pl-9 h-10 rounded-xl bg-secondary/20 border-border/50 text-sm"
                         />
                     </div>
-                    <Button onClick={() => setIsCreateOpen(true)} className="h-10 px-6 rounded-xl font-bold gap-2">
+                    <Button onClick={() => setIsCreateOpen(true)} className="h-10 px-6 rounded-xl font-bold gap-2 bg-slate-900 hover:bg-slate-800">
                         <Plus className="h-4 w-4" /> Add Marketer
                     </Button>
                 </div>
@@ -313,7 +352,7 @@ export default function AdminMarketersPage() {
                 {/* Main Directory Table */}
                 <Card className="border border-border/50 shadow-sm bg-background/50 backdrop-blur-sm rounded-2xl overflow-hidden">
                     <CardHeader className="border-b border-border/50 bg-secondary/10 py-4 px-6 flex flex-row items-center justify-between">
-                        <CardTitle className="text-lg font-bold">Marketer Accounts</CardTitle>
+                        <CardTitle className="text-lg font-bold">Account Directory</CardTitle>
                         <Badge variant="outline" className="font-mono text-xs px-3 py-1 bg-background">
                             {filteredMarketers.length} TOTAL
                         </Badge>
@@ -323,81 +362,42 @@ export default function AdminMarketersPage() {
                             <Table>
                                 <TableHeader>
                                     <TableRow className="bg-secondary/5 border-none">
-                                        <TableHead className="py-3 pl-6 uppercase text-[10px] font-bold text-muted-foreground">Name & Contact</TableHead>
-                                        <TableHead className="py-3 uppercase text-[10px] font-bold text-muted-foreground text-center">Status</TableHead>
-                                        <TableHead className="py-3 uppercase text-[10px] font-bold text-muted-foreground text-right border-x border-border/10">Balance</TableHead>
-                                        <TableHead className="py-3 uppercase text-[10px] font-bold text-muted-foreground text-right">Total Limit</TableHead>
-                                        <TableHead className="py-3 pr-6 text-right uppercase text-[10px] font-bold text-muted-foreground">Actions</TableHead>
+                                        <TableHead className="py-3 pl-8 uppercase text-[10px] font-black tracking-widest text-muted-foreground">Entity & Reach</TableHead>
+                                        <TableHead className="py-3 uppercase text-[10px] font-black tracking-widest text-muted-foreground text-center">Lifecycle</TableHead>
+                                        <TableHead className="py-3 uppercase text-[10px] font-black tracking-widest text-muted-foreground text-right border-x border-border/10">Balance</TableHead>
+                                        <TableHead className="py-3 pr-8 text-right uppercase text-[10px] font-black tracking-widest text-muted-foreground">Action Console</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {loading ? (
-                                        <TableRow><TableCell colSpan={5} className="text-center py-16 text-muted-foreground italic text-sm">Loading accounts...</TableCell></TableRow>
+                                        <TableRow><TableCell colSpan={4} className="text-center py-20 text-muted-foreground italic font-medium uppercase text-xs tracking-widest">Synchronizing Accounts...</TableCell></TableRow>
                                     ) : (
                                         filteredMarketers.map((marketer) => (
-                                            <TableRow key={marketer._id} className="hover:bg-secondary/10 transition-colors border-b border-border/50">
-                                                <TableCell className="py-4 pl-6">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                                                            <Building2 className="h-5 w-5" />
+                                            <TableRow key={marketer._id} className="hover:bg-primary/[0.03] transition-colors border-b border-border/50 group">
+                                                <TableCell className="py-6 pl-8">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-12 h-12 rounded-2xl bg-secondary/20 flex items-center justify-center text-slate-400 border border-border group-hover:border-primary/30 group-hover:text-primary transition-all">
+                                                            <Building2 className="h-6 w-6" />
                                                         </div>
                                                         <div>
-                                                            <p className="font-bold text-foreground text-sm leading-tight">{marketer.name}</p>
-                                                            <p className="text-[11px] text-muted-foreground font-medium mt-0.5 flex items-center gap-1">
-                                                                <Mail className="h-3 w-3" /> {marketer.email}
+                                                            <p className="font-bold text-foreground text-sm leading-tight italic uppercase">{marketer.name}</p>
+                                                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest mt-1.5 flex items-center gap-2">
+                                                                <Globe className="h-3 w-3" /> {marketer.email}
                                                             </p>
                                                         </div>
                                                     </div>
                                                 </TableCell>
-                                                <TableCell className="py-4 text-center">{getStatusBadge(marketer.status)}</TableCell>
-                                                <TableCell className="py-4 text-right font-mono text-sm font-bold text-primary bg-primary/[0.02] border-x border-border/10">
-                                                    {marketer.remaining_budget.toLocaleString()} <span className="text-[10px] opacity-60">Br.</span>
+                                                <TableCell className="py-6 text-center">{getStatusBadge(marketer.status)}</TableCell>
+                                                <TableCell className="py-6 text-right font-mono text-sm font-bold text-foreground bg-secondary/[0.02] border-x border-border/10">
+                                                    {marketer.remaining_budget.toLocaleString()} <span className="text-[10px] opacity-40 uppercase tracking-widest">Br.</span>
                                                 </TableCell>
-                                                <TableCell className="py-4 text-right font-mono text-xs text-muted-foreground">
-                                                    {marketer.total_budget.toLocaleString()} <span className="text-[10px] opacity-60">MAX</span>
-                                                </TableCell>
-                                                <TableCell className="py-4 pr-6 text-right">
-                                                    <DropdownMenu>
-                                                        <DropdownMenuTrigger asChild>
-                                                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
-                                                                <MoreHorizontal className="h-4 w-4" />
-                                                            </Button>
-                                                        </DropdownMenuTrigger>
-                                                        <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl border border-border/50 shadow-xl bg-background/95 backdrop-blur-md">
-                                                            <DropdownMenuItem className="rounded-lg py-2 cursor-pointer text-sm font-semibold" onClick={() => { setEditingMarketer(marketer); setIsEditOpen(true); }}>
-                                                                <Edit2 className="h-4 w-4 mr-2" /> Edit Details
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuSeparator className="my-1" />
-                                                            <DropdownMenuItem className="rounded-lg py-2 text-emerald-600 font-bold cursor-pointer text-sm" onClick={() => { setTopupData({ ...topupData, marketerId: marketer._id }); setIsTopupOpen(true); }}>
-                                                                <Wallet className="h-4 w-4 mr-2" /> Add Balance
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuItem className="rounded-lg py-2 text-amber-600 font-bold cursor-pointer text-sm" onClick={() => { setDeductData({ ...deductData, marketerId: marketer._id }); setIsDeductOpen(true); }}>
-                                                                <DollarSign className="h-4 w-4 mr-2" /> Deduct Funds
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuItem className="rounded-lg py-2 cursor-pointer text-sm font-semibold" onClick={() => handleViewTransactions(marketer)}>
-                                                                <History className="h-4 w-4 mr-2" /> Transaction History
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuSeparator className="my-1" />
-                                                            {marketer.status === 'pending' && (
-                                                                <>
-                                                                    <DropdownMenuItem className="rounded-lg py-2 text-emerald-600 font-bold cursor-pointer text-sm" onClick={() => handleApprove(marketer._id)}>
-                                                                        <CheckCircle className="h-4 w-4 mr-2" /> Approve Application
-                                                                    </DropdownMenuItem>
-                                                                    <DropdownMenuItem className="rounded-lg py-2 text-rose-600 font-bold cursor-pointer text-sm" onClick={() => handleReject(marketer._id)}>
-                                                                        <Ban className="h-4 w-4 mr-2" /> Reject Application
-                                                                    </DropdownMenuItem>
-                                                                    <DropdownMenuSeparator className="my-1" />
-                                                                </>
-                                                            )}
-                                                            <DropdownMenuItem className="rounded-lg py-2 cursor-pointer text-sm font-semibold" onClick={() => { setKycMarketer(marketer); setIsKYCOpen(true); }}>
-                                                                <SearchCode className="h-4 w-4 mr-2" /> View KYC Details
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuSeparator className="my-1" />
-                                                            <DropdownMenuItem className="rounded-lg py-2 text-destructive font-bold cursor-pointer text-sm" onClick={() => handleToggleStatus(marketer)}>
-                                                                {marketer.status === "active" ? <><Ban className="h-4 w-4 mr-2" /> Deactivate Account</> : <><CheckCircle className="h-4 w-4 mr-2" /> Activate Account</>}
-                                                            </DropdownMenuItem>
-                                                        </DropdownMenuContent>
-                                                    </DropdownMenu>
+                                                <TableCell className="py-6 pr-8 text-right">
+                                                    <Button asChild variant="outline" className="h-10 rounded-xl border-border px-6 hover:bg-primary hover:text-white hover:border-primary font-black uppercase tracking-widest text-[9px] italic transition-all group-hover:shadow-lg">
+                                                        <Link href={`/admin/marketers/${marketer._id}`}>
+                                                            Manage Account
+                                                            <ChevronRight className="h-4 w-4 ml-2" />
+                                                        </Link>
+                                                    </Button>
                                                 </TableCell>
                                             </TableRow>
                                         ))

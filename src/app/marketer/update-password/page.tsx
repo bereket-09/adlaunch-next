@@ -43,9 +43,13 @@ export default function MarketerUpdatePasswordPage() {
 
         setIsLoading(true);
         try {
+            const token = localStorage.getItem("token");
             const res = await fetch(API_ENDPOINTS.MARKETER.UPDATE_PASSWORD, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
                 body: JSON.stringify({ userId, password }),
             });
 

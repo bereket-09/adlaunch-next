@@ -46,7 +46,7 @@ export default function MarketerUpdatePasswordPage() {
             const token = localStorage.getItem("token");
             const res = await fetch(API_ENDPOINTS.MARKETER.UPDATE_PASSWORD, {
                 method: "POST",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
@@ -161,7 +161,7 @@ export default function MarketerUpdatePasswordPage() {
             {/* Right side - Visual Assurance (Dark) */}
             <div className="hidden lg:flex flex-1 bg-slate-950 relative overflow-hidden items-center justify-center p-24">
                 <div className="absolute inset-0 bg-gradient-to-tr from-orange-600/[0.05] via-primary/[0.03] to-transparent" />
-                
+
                 {/* Floating Glow Orbs */}
                 <div className="absolute top-[20%] right-[20%] w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
                 <div className="absolute bottom-[20%] left-[20%] w-[300px] h-[300px] bg-orange-500/5 rounded-full blur-[100px] pointer-events-none" />

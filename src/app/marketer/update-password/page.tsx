@@ -56,6 +56,11 @@ export default function MarketerUpdatePasswordPage() {
             const data = await res.json();
 
             if (!res.ok) {
+                if (res.status === 401) {
+                    toast({ title: "Session Expired", description: "Your session has timed out. Please login again.", variant: "destructive" });
+                    router.push("/marketer/login");
+                    return;
+                }
                 toast({ title: "Update Failed", description: data.error || "Credential update rejected", variant: "destructive" });
                 return;
             }

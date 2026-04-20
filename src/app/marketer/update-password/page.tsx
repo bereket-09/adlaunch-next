@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Logo from "@/components/Logo";
 import { useToast } from "@/hooks/use-toast";
-import { API_ENDPOINTS } from "@/config/api";
+import { marketerAPI } from "@/services/api";
 
 export default function MarketerUpdatePasswordPage() {
     const [password, setPassword] = useState("");
@@ -43,32 +43,16 @@ export default function MarketerUpdatePasswordPage() {
 
         setIsLoading(true);
         try {
-            const token = localStorage.getItem("token");
-            const res = await fetch(API_ENDPOINTS.MARKETER.UPDATE_PASSWORD, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({ userId, password }),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                if (res.status === 401) {
-                    toast({ title: "Session Expired", description: "Your session has timed out. Please login again.", variant: "destructive" });
-                    router.push("/marketer/login");
-                    return;
-                }
-                toast({ title: "Update Failed", description: data.error || "Credential update rejected", variant: "destructive" });
-                return;
-            }
+            await marketerAPI.updatePassword(userId, password);
 
             toast({ title: "Security Updated", description: "Your credentials have been hardened successfully." });
             router.push("/marketer/dashboard");
-        } catch (err) {
-            toast({ title: "Network Error", description: "Failed to sync with security server.", variant: "destructive" });
+        } catch (err: any) {
+            toast({
+                title: "Update Failed",
+                description: err.message || "Failed to sync with security server.",
+                variant: "destructive"
+            });
         } finally {
             setIsLoading(false);
         }

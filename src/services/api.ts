@@ -357,7 +357,13 @@ export const marketerAPI = {
       method: 'POST',
       body: formData
     });
-  }
+  },
+
+  updatePassword: (userId: string, password: string): Promise<{ status: boolean; message: string }> =>
+    fetchAPI(API_ENDPOINTS.MARKETER.UPDATE_PASSWORD, {
+      method: 'POST',
+      body: JSON.stringify({ userId, password }),
+    }),
 };
 
 // ============ Budget API ============
